@@ -1,0 +1,87 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@layer base {
+    html {
+        @apply overflow-hidden m-0 /* text-[0.6rem] sm:text-[0.6rem] md:text-[0.8rem] lg:text-[1rem] xl:text-[1rem] 2xl:text-[1rem] */ scroll-auto;
+    }
+}
+
+.icon-visible .icon-v {
+    @apply opacity-0 transition-all
+}
+
+.icon-visible:hover .icon-v {
+    @apply opacity-100
+}
+
+.title {
+    @apply font-['Poiret_One'] text-6xl text-center hover:animate-pulse transition-all
+}
+
+.title-big {
+    @apply font-['Poiret_One'] text-8xl text-center hover:animate-pulse transition-all
+}
+
+.title-small {
+    @apply font-['Poiret_One'] text-3xl text-center hover:animate-pulse transition-all
+}
+
+.title-p {
+    @apply font-['Poiret_One'] text-2xl
+}
+
+.title-p-small {
+    @apply font-['Poiret_One'] text-xl
+}
+
+.table-scale {
+    @apply w-full h-full border-separate border-spacing-y-5 p-10
+}
+
+.td-scale {
+    @apply text-lg text-left p-8 whitespace-nowrap border-spacing-0;
+}
+
+.th-scale {
+    @apply sticky text-lg top-0 bg-info-content text-left p-2 whitespace-nowrap z-10 min-w-[15rem];
+    @apply border-2 border-transparent hover:bg-accent-content hover:border-accent transition-all
+}
+
+.table-scale tr td:first-child{
+    @apply border-t-2 border-t-transparent border-l-2 border-l-transparent;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+.table-scale tr td:last-child {
+    @apply border-b-2 border-b-transparent border-r-2 border-r-transparent;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+.table-scale tr th:first-child {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.table-scale tr th:last-child {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.table-scale tr:hover td:first-child{
+    @apply border-t-2 border-t-accent border-l-2 border-l-accent;
+}
+
+.table-scale tr:hover td:last-child {
+    @apply border-b-2 border-b-accent border-r-2 border-r-accent;
+}
+
+.table-scale tr td {
+    @apply border-t-2 border-t-transparent border-b-2 border-b-transparent
+}
+
+.table-scale tr:hover td {
+    @apply border-t-2 border-t-accent border-b-2 border-b-accent
+}
