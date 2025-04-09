@@ -2,12 +2,10 @@ package com.staffsync.backend.api.controllers;
 
 import com.staffsync.backend.entities.dtos.CandidateDto;
 import com.staffsync.backend.result.DataResult;
+import com.staffsync.backend.result.Result;
 import com.staffsync.backend.services.abstracts.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +28,10 @@ public class CandidateController {
     @GetMapping("/getbyid")
     public DataResult<CandidateDto> getCandidateById(@RequestParam int id) {
         return candidateService.getCandidateById(id);
+    }
+
+    @PostMapping("/update")
+    public Result updateCandidate(@RequestBody CandidateDto candidateDto) {
+        return candidateService.updateCandidate(candidateDto);
     }
 }

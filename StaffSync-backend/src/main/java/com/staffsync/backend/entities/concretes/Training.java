@@ -30,6 +30,6 @@ public class Training {
     @ManyToOne
     @JoinColumn(name = "department_id", foreignKey = @ForeignKey(name = "fk_training_department",
             value = ConstraintMode.CONSTRAINT,
-            foreignKeyDefinition = "FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE SET NULL"))
+            foreignKeyDefinition = "FOREIGN KEY (department_id) REFERENCES profile(department_id) ON DELETE SET NULL"))
     private Department department;
 }

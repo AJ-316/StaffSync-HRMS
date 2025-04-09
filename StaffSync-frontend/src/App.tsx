@@ -30,8 +30,8 @@ function App() {
         <Route path="/employee/attendance" element={<PageAttendance />} />
         <Route path="/employee/performance" element={<PagePerformance />} />
         <Route path="/employee/salary" element={<PageSalary />} />
-        <Route path="/employee/data" element={<PageUserData />} />
-        <Route path="/candidate/data" element={<PageUserData />} />
+        <Route path="/employee/data" element={<PageUserData userType={'employee'} />} />
+        <Route path="/candidate/data" element={<PageUserData userType={'candidate'} />} />
         <Route path="/engagement/meetings" element={<PageMeetings />} />
         <Route path="/engagement/trainings" element={<PageTrainings />} />
         <Route path="/engagement/events" element={<PageEvents />} />

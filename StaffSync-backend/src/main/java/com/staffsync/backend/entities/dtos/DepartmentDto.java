@@ -1,5 +1,6 @@
 package com.staffsync.backend.entities.dtos;
 
+import com.staffsync.backend.entities.concretes.Candidate;
 import com.staffsync.backend.entities.concretes.Department;
 
 public record DepartmentDto(
@@ -12,6 +13,10 @@ public record DepartmentDto(
                 department.getId(),
                 department.getName()
         );
+    }
+
+    public Department update(Object... entities) {
+        return null;
     }
 
     @Override

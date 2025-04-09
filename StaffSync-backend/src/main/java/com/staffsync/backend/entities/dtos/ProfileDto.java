@@ -5,7 +5,7 @@ import com.staffsync.backend.entities.concretes.Profile;
 public record ProfileDto(
         Integer id,
         String name,
-        DepartmentDto department
+        DepartmentDto departmentDto
 ) implements Convertible<Profile> {
 
     @Override
@@ -13,8 +13,12 @@ public record ProfileDto(
         Profile profile = new Profile();
         profile.setId(id());
         profile.setName(name());
-        profile.setDepartment(department().toEntity());
+        profile.setDepartment(departmentDto().toEntity());
         return profile;
+    }
+
+    public Profile update(Object... entities) {
+        return null;
     }
 
     public static ProfileDto fromEntity(Profile profile) {

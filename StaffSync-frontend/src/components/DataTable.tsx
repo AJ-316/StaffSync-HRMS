@@ -21,12 +21,10 @@ type TableProps = {
     selectedColumns: string[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     apiGetAll: () => (Promise<AxiosResponse<any, any>>);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    apiGetById: (id: number) => (Promise<AxiosResponse<any, any>>);
     dataHolder: string;
 };
 
-const DataTable = ({ allColumns, selectedColumns, apiGetAll, apiGetById, dataHolder }: TableProps) => {
+const DataTable = ({ allColumns, selectedColumns, apiGetAll, dataHolder }: TableProps) => {
     const navigate = useNavigate();
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,26 +35,6 @@ const DataTable = ({ allColumns, selectedColumns, apiGetAll, apiGetById, dataHol
     const [searchValues, setSearchValues] = useState<SearchValues>({});
 
     const [activeField, setActiveField] = useState<string | null>(null);
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const fetchDataByID = async (id: number) => {
-        try {
-            const response = await apiGetById(id);
-            console.log("Fetched data response:", response);
-
-            const dataList = Array.isArray(response?.data?.data)
-                ? response.data.data : [];
-
-            setDataList(dataList);
-        } catch (error) {
-            console.error("Failed to fetch data:", error);
-            setError("Failed to fetch data:");
-            setDataList([]);
-        } finally {
-            setLoading(false);
-        }
-
-    };
 
     useEffect(() => {
         const fetchDataAllData = async () => {

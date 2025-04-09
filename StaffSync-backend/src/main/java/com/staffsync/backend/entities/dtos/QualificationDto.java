@@ -1,5 +1,6 @@
 package com.staffsync.backend.entities.dtos;
 
+import com.staffsync.backend.entities.concretes.Candidate;
 import com.staffsync.backend.entities.concretes.Qualification;
 
 public record QualificationDto(
@@ -12,6 +13,10 @@ public record QualificationDto(
                 qualification.getId(),
                 qualification.getName()
         );
+    }
+
+    public Qualification update(Object... entities) {
+        return null;
     }
 
     @Override

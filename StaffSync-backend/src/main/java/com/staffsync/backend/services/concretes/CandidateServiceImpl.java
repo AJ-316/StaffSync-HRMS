@@ -2,6 +2,7 @@ package com.staffsync.backend.services.concretes;
 
 import com.staffsync.backend.entities.concretes.Candidate;
 import com.staffsync.backend.entities.dtos.CandidateDto;
+import com.staffsync.backend.entities.dtos.EmployeeDto;
 import com.staffsync.backend.repositories.CandidateRepository;
 import com.staffsync.backend.result.*;
 import com.staffsync.backend.services.abstracts.CandidateService;
@@ -25,8 +26,14 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Result addCandidate(CandidateDto candidate) {
-        Candidate emp = candidateRepository.save(candidate.toEntity());
+        candidateRepository.save(candidate.toEntity());
         return new SuccessResult("Added Candidate...");
+    }
+
+    @Override
+    public Result updateCandidate(CandidateDto candidate) {
+        candidateRepository.save(candidate.toEntity());
+        return new SuccessResult("Updated Employee...");
     }
 
     @Override

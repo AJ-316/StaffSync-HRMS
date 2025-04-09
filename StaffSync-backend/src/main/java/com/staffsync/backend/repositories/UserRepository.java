@@ -17,11 +17,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
     List<User> findAllByProfile(Profile profile);
 
-    @Query("SELECT u FROM User u JOIN u.profile p WHERE p.department = :department")
-    List<User> findAllByProfileDepartment(@Param("department") Department department);
+    /*@Query("SELECT u FROM User u JOIN u.profile p WHERE p.profile = :profile")
+    List<User> findAllByProfileDepartment(@Param("profile") Department department);*/
 
-    @Query("SELECT p.department FROM User u JOIN u.profile p WHERE u.id = :userId")
-    Department findDepartmentByUserId(@Param("userId") int userId);
+    /*@Query("SELECT p.profile FROM User u JOIN u.profile p WHERE u.id = :userId")
+    Department findDepartmentByUserId(@Param("userId") int userId);*/
 
     @Query("SELECT u.profile FROM User u WHERE u.id = :userId")
     Profile findProfileByUserId(@Param("userId") int userId);

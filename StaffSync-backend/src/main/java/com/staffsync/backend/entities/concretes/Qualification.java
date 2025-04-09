@@ -1,11 +1,9 @@
 package com.staffsync.backend.entities.concretes;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@ToString
 @Entity
 @Table(name = "qualification")
 @Getter

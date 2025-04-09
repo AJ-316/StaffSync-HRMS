@@ -1,21 +1,9 @@
 import { useState } from 'react';
 import Header from '../../components/PageHeader/Header';
 import * as DataTable from '../../components/DataTable'
-import { getAllEmployees } from '../../services/employeeService';
-import { getCandidateById } from '../../services/candidateService';
+import { allColumns, getAllEmployees } from '../../services/employeeService';
 
 function PageDatabase() {
-  const allColumns: DataTable.Column[] = [
-    { label: "ID", accessor: "id" },
-    { label: "Name", accessor: "userDto.name" },
-    { label: "Department", accessor: "userDto.profile.department.name" },
-    { label: "Profile", accessor: "userDto.profile.name" },
-    { label: "Qualification", accessor: "userDto.qualification.name" },
-    { label: "Status", accessor: "status" },
-    { label: "Join Date", accessor: "joinDate" },
-    { label: "Email", accessor: "userDto.email" },
-    { label: "Contact", accessor: "userDto.contactNumber" },
-  ];
 
   const [selectedColumns, setSelectedColumns] = useState<string[]>(allColumns.map(c => c.accessor));
 
@@ -64,7 +52,7 @@ function PageDatabase() {
           </div>
         </div>
       </div>
-      <DataTable.default dataHolder='employee' allColumns={allColumns} selectedColumns={selectedColumns} apiGetAll={getAllEmployees} apiGetById={getCandidateById}/>
+      <DataTable.default dataHolder='employee' allColumns={allColumns} selectedColumns={selectedColumns} apiGetAll={getAllEmployees}/>
     </div>
   );
 }

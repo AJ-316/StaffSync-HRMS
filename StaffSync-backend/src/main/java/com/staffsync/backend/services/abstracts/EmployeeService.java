@@ -13,6 +13,8 @@ public interface EmployeeService {
 
     Result addEmployee(EmployeeDto employee);
 
+    Result updateEmployee(EmployeeDto employee);
+
     Result deleteEmployee(int employeeId);
 
     DataResult<EmployeeDto> getEmployeeById(int employeeId);

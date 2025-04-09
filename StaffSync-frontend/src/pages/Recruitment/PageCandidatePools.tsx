@@ -1,22 +1,9 @@
 import { useState } from 'react';
 import Header from '../../components/PageHeader/Header';
 import * as DataTable from '../../components/DataTable'
-import { getAllCandidates } from '../../services/candidateService.ts';
-import { getEmployeeById } from '../../services/employeeService.ts';
+import { allColumns, getAllCandidates } from '../../services/candidateService.ts';
 
 function PageCandidatePools() {
-  const allColumns: DataTable.Column[] = [
-    { label: "ID", accessor: "id" },
-    { label: "Name", accessor: "userDto.name" },
-    { label: "Department", accessor: "userDto.profile.department.name" },
-    { label: "Profile", accessor: "userDto.profile.name" },
-    { label: "Qualification", accessor: "userDto.qualification.name" },
-    { label: "Email", accessor: "userDto.email" },
-    { label: "Contact", accessor: "userDto.contactNumber" },
-    { label: "Status", accessor: "status" },
-    { label: "Interview Stage", accessor: "interviewStage" },
-    { label: "Rejection Reason", accessor: "rejectionReason" }
-  ];
 
   const [selectedColumns, setSelectedColumns] = useState<string[]>(allColumns.map(c => c.accessor));
 
@@ -65,7 +52,7 @@ function PageCandidatePools() {
           </div>
         </div>
       </div>
-      <DataTable.default dataHolder='candidate' allColumns={allColumns} selectedColumns={selectedColumns} apiGetAll={getAllCandidates} apiGetById={getEmployeeById} />
+      <DataTable.default dataHolder='candidate' allColumns={allColumns} selectedColumns={selectedColumns} apiGetAll={getAllCandidates} />
     </div>
   );
 }

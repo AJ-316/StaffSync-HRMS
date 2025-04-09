@@ -73,20 +73,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
-    @Override
+    /*@Override
     public List<User> getUsersByDepartment(DepartmentDto department) {
         return userRepository.findAllByProfileDepartment(department.toEntity());
-    }
+    }*/
 
     @Override
     public List<User> getUsersByProfile(Profile profile) {
         return userRepository.findAllByProfile(profile);
     }
 
-    @Override
+/*    @Override
     public Department getUserDepartment(int userId) {
         return userRepository.findDepartmentByUserId(userId);
-    }
+    }*/
 
     @Override
     public Profile getUserProfile(int userId) {

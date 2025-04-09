@@ -21,6 +21,25 @@ public record EmployeeDto(
         );
     }
 
+    public Employee update(Object... entities) {
+        Employee employee = null;
+
+        for (Object entity : entities) {
+            if(entity instanceof Employee) {
+                employee = (Employee) entity;
+
+                User user = userDto().update(entities);
+                if(user != null)
+                    employee.setUser(user);
+
+                employee.setStatus(status());
+                employee.setProfiles(employee.getProfiles());
+                employee.setJoinDate(employee.getJoinDate());
+            }
+        }
+        return employee;
+    }
+
     @Override
     public Employee toEntity() {
         User user = userDto.toEntity();

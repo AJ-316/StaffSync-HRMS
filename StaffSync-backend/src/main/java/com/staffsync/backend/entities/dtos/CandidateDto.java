@@ -25,6 +25,10 @@ public record CandidateDto(
         );
     }
 
+    public Candidate update(Object... entities) {
+        return null;
+    }
+
     @Override
     public Candidate toEntity() {
         User user = userDto.toEntity();

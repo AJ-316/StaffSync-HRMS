@@ -11,6 +11,8 @@ public interface CandidateService {
 
     Result addCandidate(CandidateDto candidate);
 
+    Result updateCandidate(CandidateDto candidate);
+
     Result deleteCandidate(int candidateId);
 
     DataResult<CandidateDto> getCandidateById(int candidateId);

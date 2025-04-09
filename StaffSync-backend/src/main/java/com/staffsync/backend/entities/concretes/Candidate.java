@@ -29,7 +29,7 @@ public class Candidate {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "interview_stage", nullable = false)
-    private InterviewStage interviewStage = InterviewStage.NONE;
+    private InterviewStage interviewStage = InterviewStage.NOT_INITIATED;
 
     @Column(name = "rejection_reason", columnDefinition = "TEXT")
     private String rejectionReason;
@@ -39,6 +39,6 @@ public class Candidate {
     }
 
     public enum InterviewStage {
-        NONE, ROUND_1, ROUND_2, FINAL
+        NOT_INITIATED, ROUND_1, ROUND_2, FINAL
     }
 }

@@ -23,11 +23,11 @@ public interface UserService {
 
     Optional<User> getUserByEmail(String email);
 
-    List<User> getUsersByDepartment(DepartmentDto department);
+    /*List<User> getUsersByDepartment(DepartmentDto department);*/
 
     List<User> getUsersByProfile(Profile profile);
 
-    Department getUserDepartment(int userId);
+    /*Department getUserDepartment(int userId);*/
 
     Profile getUserProfile(int userId);
 }
