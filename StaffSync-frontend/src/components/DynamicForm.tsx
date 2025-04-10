@@ -3,29 +3,27 @@ import { AxiosResponse } from "axios";
 import { Column } from "./DataTable";
 import { cloneDeep, set } from "lodash";
 import { getNestedValue } from "../services/service";
-
-export interface FormValues {
-    [key: string]: string;
-}
+import { APIKeyValues, useFetchById } from "./FetchResult";
+import LoadState from "./LoadState";
+import { PaperAirplaneIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 type DataProps = {
     id: number;
     allColumns: Column[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     apiGetById: (id: number) => (Promise<AxiosResponse<any, any>>);
-    onSubmit: (formValues: FormValues) => (Promise<void>);
+    onSubmit: (formValues: APIKeyValues) => (Promise<void>);
 };
 
 const DynamicForm = ({ id, allColumns, apiGetById, onSubmit }: DataProps) => {
-    const [userDataList, setUserDataList] = useState<FormValues>();
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    const { dataList, loading, error } = useFetchById(id, apiGetById);
 
-    const [formValues, setFormValues] = useState<FormValues>({});
+    const [updatedList, setUpdatedList] = useState<APIKeyValues>({});
+    const [formValues, setFormValues] = useState<APIKeyValues>({});
     const [isEditable, setIsEditable] = useState<boolean>(false);
 
     const populateForm = (userDataList: unknown) => {
-        const initialValues: FormValues = {};
+        const initialValues: APIKeyValues = {};
 
         allColumns.forEach((column) => {
             set(initialValues, column.accessor, getNestedValue(userDataList, column.accessor) || "");
@@ -36,32 +34,13 @@ const DynamicForm = ({ id, allColumns, apiGetById, onSubmit }: DataProps) => {
     }
 
     useEffect(() => {
-        populateForm(userDataList);
+        populateForm(dataList);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userDataList])
-
-    useEffect(() => {
-        const fetchDataByID = async (id: number) => {
-            try {
-                const response = await apiGetById(id);
-                console.log("Fetched data response:", response);
-
-                setUserDataList(response.data.data);
-            } catch (error) {
-                console.error("Failed to fetch data:", error);
-                setError("Failed to fetch data:");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchDataByID(id);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [dataList])
 
     const handleChange = (accessor: string, value: string) => {
         if (!isEditable) {
-            populateForm(userDataList);
+            populateForm(dataList);
             return;
         }
         /* console.log("Typing...", accessor, value) */
@@ -69,18 +48,18 @@ const DynamicForm = ({ id, allColumns, apiGetById, onSubmit }: DataProps) => {
         set(updatedValues, accessor, value);
         setFormValues(updatedValues);
 
-        const updatedData = cloneDeep(userDataList);
+        const updatedData = cloneDeep(dataList);
         if (!updatedData) return;
 
         set(updatedData, accessor, value);
-        setUserDataList(updatedData);
+        setUpdatedList(updatedData);
     };
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        if (isEditable && userDataList) {
+        if (isEditable && dataList) {
             setIsEditable(false);
-            onSubmit(userDataList);
+            onSubmit(updatedList);
         }
     };
 
@@ -90,11 +69,10 @@ const DynamicForm = ({ id, allColumns, apiGetById, onSubmit }: DataProps) => {
 
     return (
         <div className="m-10 overflow-y-auto shadow-2xl shadow-neutral-950 border-l-2 border-l-info-content border-t-2 border-t-info-content rounded-[50px]">
-            {loading ? (
-                <p className="text-center p-4">Loading...</p>
-            ) : error ? (
-                <p className="text-center text-error p-4">{error}</p>
-            ) : (
+            <LoadState error={error} loading={loading} />
+
+            {!error && !loading &&
+
                 <form onSubmit={handleSubmit} className="p-6 w-full flex flex-col">
                     <div className="flex flex-wrap -mx-2">
                         {allColumns.map((col, index) => (
@@ -119,18 +97,19 @@ const DynamicForm = ({ id, allColumns, apiGetById, onSubmit }: DataProps) => {
                             className={`m-2 btn btn-soft grow ${isEditable ? "btn-success" : "btn-error"}`}
                             disabled={!isEditable}
                         >
+                            <PaperAirplaneIcon className="w-4 h-4" />
                             Submit
                         </button>
                         <button
                             type="button"
-                            className='m-2 btn btn-soft btn-accent'
+                            className={`m-2 btn btn-accent btn-soft ${isEditable ? 'btn-error' : 'btn-accent'}`}
                             onClick={() => setIsEditable(prev => !prev)}
                         >
-                            {isEditable ? "Cancel Edit ❌" : "Edit ✏️"}
+                            {isEditable ? <XMarkIcon className="w-4 h-4" /> : <PencilSquareIcon className="w-4 h-4" />}
+                            {isEditable ? "Cancel Edit" : "Edit"}
                         </button>
                     </div>
-                </form>
-            )}
+                </form>}
         </div>
     );
 

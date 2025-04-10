@@ -6,6 +6,8 @@ import DataTable from '../../components/DataTable';
 import { allColumns, getAllSalaries } from '../../services/salaryService';
 import Header from '../../components/PageHeader/Header';
 import InnerHead from '../../components/InnerHead';
+import LinkedDropdown from '../../components/PageHeader/LinkedDropdown';
+import { BeakerIcon } from '@heroicons/react/24/outline';
 
 function PageSalary() {
     const location = useLocation();
@@ -37,7 +39,26 @@ function PageSalary() {
                 title="Employee Salaries"
                 desc={["Manage employee salaries.", "Instantly download salary csv and notify employees through email"]}
 
-                content={<></>}
+                content={<div className='ml-10 mr-auto'>
+                    <LinkedDropdown dropdownLinks={[
+                        {
+                            name: "Operations",
+                            icon: <BeakerIcon className='w-6 h-6' />,
+                            classes: "btn-soft",
+                            btns: [
+                                {
+                                    name: "Download CSV",
+                                    link: ``
+                                },
+                                {
+                                    name: "Generate Salaries",
+                                    link: ``
+                                }
+                            ]
+                        }
+                    ]} />
+                    
+                </div>}
             />
             <DataTable
                 navigationHolder='employee/salary'

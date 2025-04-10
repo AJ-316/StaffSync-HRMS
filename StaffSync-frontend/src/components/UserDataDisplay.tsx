@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
-import DynamicForm, { FormValues } from './DynamicForm';
+import DynamicForm, { APIKeyValues } from './DynamicForm';
 import Header from './PageHeader/Header';
 import { Column } from './DataTable';
 import { AxiosResponse } from 'axios';
@@ -22,7 +22,7 @@ function UserDataDisplay({ userType, allUserColumns, apiGetById, apiUpdateData }
 
     const [id, setId] = useState<number>(-1);
 
-    const onFormSubmit = async (formValues: FormValues) => {
+    const onFormSubmit = async (formValues: APIKeyValues) => {
         console.log("Sending Update Request:", JSON.stringify(formValues))
 
         await apiUpdateData(formValues);
@@ -51,10 +51,10 @@ function UserDataDisplay({ userType, allUserColumns, apiGetById, apiUpdateData }
         <div className="flex flex-col h-screen bg-base-300">
             <Header />
             <div className="w-full flex flex-col">
-                <div className="flex justify-between items-center p-4 sticky top-0 z-10">
-                    <p className="title ml-20">{`${userType.charAt(0).toUpperCase() + userType.slice(1)}`} Data</p>
-                    {userType == "employee" &&
-                        <div className='ml-10 mr-auto'>
+                <div className="flex justify-between items-center p-2 sticky top-0 z-10">
+                    <p className="title ml-20 pt-4">{`${userType.charAt(0).toUpperCase() + userType.slice(1)}`} Data</p>
+                    {userType === "employee" &&
+                        <div className='ml-10 mt-4 mr-auto'>
                             <LinkedDropdown dropdownLinks={[
                                 {
                                     name: "Operations",

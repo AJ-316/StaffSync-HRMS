@@ -8,9 +8,9 @@ interface UserDataProps {
 
 function PageUserData({ userType }: UserDataProps) {
 
-    const allUserColumns = userType == "employee" ? allEmployeeColumns : allCandidateColumns;
-    const apiGetById = userType == "employee" ? getEmployeeById : getCandidateById;
-    const apiUpdateData = userType == "employee" ? updateEmployee : updateCandidate;
+    const allUserColumns = userType === "employee" ? allEmployeeColumns : allCandidateColumns;
+    const apiGetById = userType === "employee" ? getEmployeeById : getCandidateById;
+    const apiUpdateData = userType === "employee" ? updateEmployee : updateCandidate;
 
     return (
         <UserDataDisplay

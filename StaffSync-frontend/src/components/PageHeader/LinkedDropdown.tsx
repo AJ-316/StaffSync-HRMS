@@ -38,7 +38,7 @@ function LinkedDropdown({ dropdownLinks }: LinkedDropdownProps) {
                     onMouseLeave={() => handleToggle(-1)}
                     whileHover={{scale:1.1}}
                 >
-                    <summary className={`btn btn-ghost btn-accent m-5 p-5 flex items-center gap-2 text-xl ${dropdownLink.classes ? dropdownLink.classes : ""}`}>
+                    <summary className={`btn btn-ghost btn-accent m-4 p-5 flex items-center gap-2 text-xl ${dropdownLink.classes ? dropdownLink.classes : ""}`}>
                         {dropdownLink.icon ? dropdownLink.icon : null}
                         {dropdownLink.name} <ChevronDownIcon className={`w-4 h-4 ${openIndex === index ? 'rotate-180' : ''}`} />
                     </summary>
