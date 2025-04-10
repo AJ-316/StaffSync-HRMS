@@ -21,7 +21,19 @@ public record EmployeeDto(
         );
     }
 
-    public Employee update(Object... entities) {
+    @Override
+    public Employee toEntity() {
+        User user = userDto.toEntity();
+
+        Employee employee = new Employee();
+        employee.setEmployeeId(id());
+        employee.setUser(user);
+        employee.setJoinDate(joinDate());
+        employee.setStatus(status());
+        return employee;
+    }
+}
+/*public Employee update(Object... entities) {
         Employee employee = null;
 
         for (Object entity : entities) {
@@ -38,17 +50,4 @@ public record EmployeeDto(
             }
         }
         return employee;
-    }
-
-    @Override
-    public Employee toEntity() {
-        User user = userDto.toEntity();
-
-        Employee employee = new Employee();
-        employee.setEmployeeId(id());
-        employee.setUser(user);
-        employee.setJoinDate(joinDate());
-        employee.setStatus(status());
-        return employee;
-    }
-}
+    }*/

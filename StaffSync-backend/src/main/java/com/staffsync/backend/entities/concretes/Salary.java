@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "salary")
 @Getter
@@ -17,28 +19,30 @@ public class Salary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "salary_id")
-    private int salaryId;
+    private int id;
 
     @OneToOne
-    @JoinColumn(name = "employee_id", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_salary_employee",
-                    value = ConstraintMode.CONSTRAINT,
-                    foreignKeyDefinition = "FOREIGN KEY (employee_id) REFERENCES employee(employee_id) ON DELETE CASCADE"))
+    @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
     @Column(name = "basic_salary", nullable = false)
-    private double basicSalary;
+    private BigDecimal basicSalary;
 
     @Column(name = "hra", nullable = false)
-    private double hra;
+    private BigDecimal hra;
 
     @Column(name = "tax", nullable = false)
-    private double tax;
+    private BigDecimal tax;
 
     @Column(name = "deductions", nullable = false)
-    private double deductions;
+    private BigDecimal deductions;
 
-    public double getNetSalary() {
-        return basicSalary + hra - tax - deductions; // Simulating stored generated column
-    }
+    @Column(name = "hra_salary", nullable = false)
+    private BigDecimal hraSalary;
+
+    @Column(name = "tax_salary", nullable = false)
+    private BigDecimal taxSalary;
+
+    @Column(name = "net_salary", nullable = false)
+    private BigDecimal netSalary;
 }

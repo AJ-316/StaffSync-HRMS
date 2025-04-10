@@ -25,9 +25,9 @@ public record CandidateDto(
         );
     }
 
-    public Candidate update(Object... entities) {
+    /*public Candidate update(Object... entities) {
         return null;
-    }
+    }*/
 
     @Override
     public Candidate toEntity() {

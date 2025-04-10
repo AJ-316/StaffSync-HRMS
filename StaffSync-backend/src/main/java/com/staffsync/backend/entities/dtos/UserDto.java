@@ -37,10 +37,6 @@ public record UserDto(
         );
     }
 
-    public User update(Object... entities) {
-        return null;
-    }
-
     @Override
     public User toEntity() {
         Qualification qualificationE = qualificationDto().toEntity();

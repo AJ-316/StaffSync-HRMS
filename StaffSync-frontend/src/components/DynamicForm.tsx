@@ -1,12 +1,8 @@
 import { useState, useEffect } from "react";
 import { AxiosResponse } from "axios";
 import { Column } from "./DataTable";
-import { cloneDeep, set, update } from "lodash";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getNestedValue = (obj: any, path: string): string => {
-    return path.split('.').reduce((acc, key) => acc?.[key], obj);
-};
+import { cloneDeep, set } from "lodash";
+import { getNestedValue } from "../services/service";
 
 export interface FormValues {
     [key: string]: string;
@@ -17,17 +13,16 @@ type DataProps = {
     allColumns: Column[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     apiGetById: (id: number) => (Promise<AxiosResponse<any, any>>);
-    onSubmit: (formValues: object | undefined) => (void);
-    isEditable: boolean;
+    onSubmit: (formValues: FormValues) => (Promise<void>);
 };
 
-const DynamicForm = ({ id, allColumns, isEditable, apiGetById, onSubmit }: DataProps) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [userDataList, setUserDataList] = useState<object>();
+const DynamicForm = ({ id, allColumns, apiGetById, onSubmit }: DataProps) => {
+    const [userDataList, setUserDataList] = useState<FormValues>();
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     const [formValues, setFormValues] = useState<FormValues>({});
+    const [isEditable, setIsEditable] = useState<boolean>(false);
 
     const populateForm = (userDataList: unknown) => {
         const initialValues: FormValues = {};
@@ -42,19 +37,16 @@ const DynamicForm = ({ id, allColumns, isEditable, apiGetById, onSubmit }: DataP
 
     useEffect(() => {
         populateForm(userDataList);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userDataList])
 
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
-
         const fetchDataByID = async (id: number) => {
             try {
                 const response = await apiGetById(id);
                 console.log("Fetched data response:", response);
-                
+
                 setUserDataList(response.data.data);
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error) {
                 console.error("Failed to fetch data:", error);
                 setError("Failed to fetch data:");
@@ -64,6 +56,7 @@ const DynamicForm = ({ id, allColumns, isEditable, apiGetById, onSubmit }: DataP
         };
 
         fetchDataByID(id);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleChange = (accessor: string, value: string) => {
@@ -77,7 +70,7 @@ const DynamicForm = ({ id, allColumns, isEditable, apiGetById, onSubmit }: DataP
         setFormValues(updatedValues);
 
         const updatedData = cloneDeep(userDataList);
-        if(!updatedData) return;
+        if (!updatedData) return;
 
         set(updatedData, accessor, value);
         setUserDataList(updatedData);
@@ -85,10 +78,15 @@ const DynamicForm = ({ id, allColumns, isEditable, apiGetById, onSubmit }: DataP
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        if (isEditable) {
+        if (isEditable && userDataList) {
+            setIsEditable(false);
             onSubmit(userDataList);
         }
     };
+
+    useEffect(() => {
+        console.log("isEditable changed:", isEditable);
+    }, [isEditable]);
 
     return (
         <div className="m-10 overflow-y-auto shadow-2xl shadow-neutral-950 border-l-2 border-l-info-content border-t-2 border-t-info-content rounded-[50px]">
@@ -99,7 +97,7 @@ const DynamicForm = ({ id, allColumns, isEditable, apiGetById, onSubmit }: DataP
             ) : (
                 <form onSubmit={handleSubmit} className="p-6 w-full flex flex-col">
                     <div className="flex flex-wrap -mx-2">
-                        {allColumns.map((col) => (
+                        {allColumns.map((col, index) => (
                             <div key={col.accessor} className="w-1/3 px-2 mb-4 flex items-center">
                                 <label className="text-sm font-medium mb-1 w-1/5 text-right">
                                     {col.label}
@@ -109,19 +107,28 @@ const DynamicForm = ({ id, allColumns, isEditable, apiGetById, onSubmit }: DataP
                                     value={getNestedValue(formValues, col.accessor) || ""}
                                     onChange={(e) => handleChange(col.accessor, e.target.value)}
                                     className="w-2/3 border m-2 p-2 rounded-md shadow-sm"
-                                    placeholder={`Enter ${col.label}`}
-                                    disabled={!isEditable}
+                                    placeholder={`- ${col.label} -`}
+                                    disabled={!isEditable || index == 0}
                                 />
                             </div>
                         ))}
                     </div>
-                    <button
-                        type="submit"
-                        className={`btn btn-soft ${isEditable ? "btn-success" : "btn-error"}`}
-                        disabled={!isEditable}
-                    >
-                        Submit
-                    </button>
+                    <div className="flex flex-row p-1">
+                        <button
+                            type="submit"
+                            className={`m-2 btn btn-soft grow ${isEditable ? "btn-success" : "btn-error"}`}
+                            disabled={!isEditable}
+                        >
+                            Submit
+                        </button>
+                        <button
+                            type="button"
+                            className='m-2 btn btn-soft btn-accent'
+                            onClick={() => setIsEditable(prev => !prev)}
+                        >
+                            {isEditable ? "Cancel Edit ❌" : "Edit ✏️"}
+                        </button>
+                    </div>
                 </form>
             )}
         </div>

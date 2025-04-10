@@ -3,6 +3,12 @@ import { Column } from '../components/DataTable';
 
 const API_URL = 'http://localhost:8080/api/employee';
 
+export interface ProfileDto {
+    id: string;
+    name: string;
+    departmentDto: { id: string; name: string };
+};
+
 export interface UserDto {
     id: string;
     name: string;
@@ -14,19 +20,27 @@ export interface UserDto {
     email: string;
     contactNumber: string;
     qualificationDto: { id: string; name: string };
-    profileDto: {
-        id: string;
-        name: string;
-        departmentDto: { id: string; name: string };
-    };
+    profileDto: ProfileDto;
 }
 
-export interface Employee {
-    id: number;
+export interface SimpleUserDto {
+    id: string;
+    name: string;
+    gender: string;
+    profileDto: ProfileDto;
+}
+
+export interface EmployeeDto {
+    id: string;
     userDto: UserDto;
     joinDate: string;
     status: string;
 };
+
+export interface SimpleEmployeeDto {
+    id: string;
+    userDto: SimpleUserDto;
+}
 
 export const allColumns: Column[] = [
     { label: "ID", accessor: "id" },

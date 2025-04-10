@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
+import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import { getNestedValueOrElse } from "../services/service";
 
 export type Column = {
     label: string;
@@ -11,20 +13,15 @@ type SearchValues = {
     [key: string]: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getNestedValue = (obj: any, path: string): string => {
-    return path.split('.').reduce((acc, key) => acc?.[key], obj) ?? "-";
-};
-
 type TableProps = {
     allColumns: Column[];
     selectedColumns: string[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     apiGetAll: () => (Promise<AxiosResponse<any, any>>);
-    dataHolder: string;
+    navigationHolder: string;
 };
 
-const DataTable = ({ allColumns, selectedColumns, apiGetAll, dataHolder }: TableProps) => {
+const DataTable = ({ allColumns, selectedColumns, apiGetAll, navigationHolder }: TableProps) => {
     const navigate = useNavigate();
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,7 +62,7 @@ const DataTable = ({ allColumns, selectedColumns, apiGetAll, dataHolder }: Table
 
     const filteredDatas = datas.filter((dat) =>
         Object.entries(searchValues).every(([accessor, value]) => {
-            const datValue = getNestedValue(dat, accessor);
+            const datValue = getNestedValueOrElse(dat, accessor, '-');
             return String(datValue).toLowerCase().includes(value.toLowerCase());
         })
     );
@@ -91,7 +88,7 @@ const DataTable = ({ allColumns, selectedColumns, apiGetAll, dataHolder }: Table
                                     >
                                         {activeField === col.label ? (
                                             <label className="input">
-                                                <svg className="h-[2em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="3" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></g></svg>
+                                                <MagnifyingGlassIcon className="w-8 h-8"/>
                                                 <input
                                                     type="search"
                                                     placeholder="Search"
@@ -127,13 +124,13 @@ const DataTable = ({ allColumns, selectedColumns, apiGetAll, dataHolder }: Table
                         {filteredDatas.map((dat, index) => (
                             <tr key={index}
                                 className="bg-base-100 hover:border-2 border-accent hover:bg-accent-content transition-all duration-100 ease-in-out"
-                                onClick={() => navigate(`/${dataHolder}/data?id=${dat.id}`)}
+                                onClick={() => {navigate(`/${navigationHolder}?id=${dat.id}`)?.then(() => window.location.reload());}}
                             >
                                 {allColumns
                                     .filter((col) => selectedColumns.includes(col.accessor))
                                     .map((col) => (
                                         <td className="td-scale" key={col.accessor}>
-                                            {getNestedValue(dat, col.accessor)}
+                                            {getNestedValueOrElse(dat, col.accessor, '-')}
                                         </td>
                                     ))}
                             </tr>

@@ -15,9 +15,9 @@ public record DepartmentDto(
         );
     }
 
-    public Department update(Object... entities) {
+    /*public Department update(Object... entities) {
         return null;
-    }
+    }*/
 
     @Override
     public Department toEntity() {

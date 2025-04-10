@@ -15,9 +15,9 @@ export interface Candidate {
 export const allColumns: Column[] = [
     { label: "ID", accessor: "id" },
     { label: "Name", accessor: "userDto.name" },
-    { label: "Department", accessor: "userDto.profile.department.name" },
-    { label: "Profile", accessor: "userDto.profile.name" },
-    { label: "Qualification", accessor: "userDto.qualification.name" },
+    { label: "Department", accessor: "userDto.profileDto.departmentDto.name" },
+    { label: "Profile", accessor: "userDto.profileDto.name" },
+    { label: "Qualification", accessor: "userDto.qualificationDto.name" },
     { label: "Email", accessor: "userDto.email" },
     { label: "Contact", accessor: "userDto.contactNumber" },
     { label: "Status", accessor: "status" },

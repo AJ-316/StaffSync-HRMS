@@ -16,7 +16,7 @@ function Header() {
                         btns: [
                             {
                                 name: "Job Listings",
-                                link: "/recruitment/job-listings"
+                                link: "/recruitment/job-listings",
                             },
                             {
                                 name: "Candidate Pools",
@@ -29,7 +29,7 @@ function Header() {
                         ]
                     },
                     {
-                        name: "Employee",
+                        name: "Employees",
                         btns: [
                             {
                                 name: "Database",

@@ -15,9 +15,9 @@ public record QualificationDto(
         );
     }
 
-    public Qualification update(Object... entities) {
+    /*public Qualification update(Object... entities) {
         return null;
-    }
+    }*/
 
     @Override
     public Qualification toEntity() {

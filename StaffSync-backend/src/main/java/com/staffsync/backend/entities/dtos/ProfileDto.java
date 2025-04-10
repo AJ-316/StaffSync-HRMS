@@ -17,9 +17,9 @@ public record ProfileDto(
         return profile;
     }
 
-    public Profile update(Object... entities) {
+    /*public Profile update(Object... entities) {
         return null;
-    }
+    }*/
 
     public static ProfileDto fromEntity(Profile profile) {
         return new ProfileDto(

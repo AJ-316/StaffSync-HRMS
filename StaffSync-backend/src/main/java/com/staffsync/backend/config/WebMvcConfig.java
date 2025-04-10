@@ -1,4 +1,4 @@
-package com.staffsync.backend.api.controllers;
+package com.staffsync.backend.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
