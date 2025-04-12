@@ -3,9 +3,11 @@ package com.staffsync.backend.services.concretes;
 import com.staffsync.backend.entities.concretes.Candidate;
 import com.staffsync.backend.entities.dtos.CandidateDto;
 import com.staffsync.backend.entities.dtos.EmployeeDto;
+import com.staffsync.backend.entities.dtos.UserDto;
 import com.staffsync.backend.repositories.CandidateRepository;
 import com.staffsync.backend.result.*;
 import com.staffsync.backend.services.abstracts.CandidateService;
+import com.staffsync.backend.services.abstracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +20,12 @@ import java.util.stream.Collectors;
 public class CandidateServiceImpl implements CandidateService {
 
     private final CandidateRepository candidateRepository;
+    private final UserService userService;
 
     @Autowired
-    public CandidateServiceImpl(CandidateRepository candidateRepository) {
+    public CandidateServiceImpl(CandidateRepository candidateRepository, UserService userService) {
         this.candidateRepository = candidateRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -32,8 +36,11 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Result updateCandidate(CandidateDto candidate) {
+        UserDto user = candidate.userDto();
+        userService.updateUser(user.id(), user);
+
         candidateRepository.save(candidate.toEntity());
-        return new SuccessResult("Updated Employee...");
+        return new SuccessResult("Updated Candidate...");
     }
 
     @Override

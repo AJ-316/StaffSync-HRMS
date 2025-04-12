@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import Header from '../../components/PageHeader/Header';
-import * as DataTable from '../../components/DataTable'
-import { allColumns, getAllEmployees } from '../../services/employeeService';
+import { columnConfig, employeeService } from '../../services/apiService';
 import { FunnelIcon as SolidFunnel } from '@heroicons/react/24/solid';
 import { FunnelIcon as OutlineFunnel } from '@heroicons/react/24/outline';
 import InnerHead from '../../components/InnerHead';
+import DataTable from '../../components/DataTable';
 
 function PageDatabase() {
 
-  const [selectedColumns, setSelectedColumns] = useState<string[]>(allColumns.map(c => c.accessor));
+  const [selectedColumns, setSelectedColumns] = useState<string[]>(columnConfig.employee.map(c => c.accessor));
   const filterBtnRef = useRef<HTMLDetailsElement>(null);
   const [isFiltering, setIsFiltering] = useState<boolean>(false);
 
@@ -32,7 +32,7 @@ function PageDatabase() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-base-300">
+    <div className="main-div">
       <Header />
       <InnerHead
         title="Employee Database"
@@ -48,7 +48,7 @@ function PageDatabase() {
 
             <ul className="fixed z-3 translate-x-[-50%] menu dropdown-content bg-neutral rounded-box w-52 p-2 shadow-xl">
               <>
-                {allColumns.map((col, index) => (
+                {columnConfig.employee.map((col, index) => (
                   <>
                     {index > 0 &&
                       <li key={col.accessor}>
@@ -69,34 +69,14 @@ function PageDatabase() {
           </details>
         }
       />
-      <DataTable.default navigationHolder='employee/data' allColumns={allColumns} selectedColumns={selectedColumns} apiGetAll={getAllEmployees} />
+      <DataTable
+        navigationHolder='employee'
+        allColumns={columnConfig.employee}
+        selectedColumns={selectedColumns}
+        apiGetAll={employeeService.getAll}
+      />
     </div>
   );
 }
 
 export default PageDatabase;
-
-
-/* import EmployeeTable from '../../components/EmployeeTable'
-import Header from '../../components/PageHeader/Header'
-
-function PageDatabase() {
-  return (
-    <div className="flex flex-col h-screen bg-base-300">
-      <Header />
-      <div className="w-full flex flex-col">
-        <div className="flex justify-between items-center p-4 sticky top-0 z-10">
-          <p className="title ml-20">Employee Database</p>
-          <p className="ml-10 title-p-small text-left">
-            Manage your employees.<br />
-            Add filters to search through database with ease</p>
-          <button className="btn btn-accent btn-outline btn-lg ml-auto mr-10 p-5">Filter 💧</button>
-        </div>
-      </div>
-      <EmployeeTable />
-    </div>
-  )
-}
-
-export default PageDatabase
- */

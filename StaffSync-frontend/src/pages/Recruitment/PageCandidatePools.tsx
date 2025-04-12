@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import Header from '../../components/PageHeader/Header';
-import * as DataTable from '../../components/DataTable'
-import { allColumns, getAllCandidates } from '../../services/candidateService.ts';
 import { FunnelIcon as SolidFunnel } from '@heroicons/react/24/solid';
 import { FunnelIcon as OutlineFunnel } from '@heroicons/react/24/outline';
 import InnerHead from '../../components/InnerHead.tsx';
+import { candidateService, columnConfig } from '../../services/apiService.ts';
+import DataTable from '../../components/DataTable.tsx';
 
 function PageCandidatePools() {
 
-  const [selectedColumns, setSelectedColumns] = useState<string[]>(allColumns.map(c => c.accessor));
+  const [selectedColumns, setSelectedColumns] = useState<string[]>(columnConfig.candidate.map(c => c.accessor));
   const filterBtnRef = useRef<HTMLDetailsElement>(null);
   const [isFiltering, setIsFiltering] = useState<boolean>(false);
 
@@ -32,7 +32,7 @@ function PageCandidatePools() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-base-300">
+    <div className="main-div">
       <Header />
       <InnerHead
         title="Candidates Pool"
@@ -48,7 +48,7 @@ function PageCandidatePools() {
 
             <ul className="fixed z-3 translate-x-[-50%] menu dropdown-content bg-neutral rounded-box w-52 p-2 shadow-xl">
               <>
-                {allColumns.map((col, index) => (
+                {columnConfig.candidate.map((col, index) => (
                   <>
                     {index > 0 &&
                       <li key={col.accessor}>
@@ -69,7 +69,11 @@ function PageCandidatePools() {
           </details>
         }
       />
-      <DataTable.default navigationHolder='candidate/data' allColumns={allColumns} selectedColumns={selectedColumns} apiGetAll={getAllCandidates} />
+      <DataTable
+        navigationHolder='candidate'
+        allColumns={columnConfig.candidate}
+        selectedColumns={selectedColumns}
+        apiGetAll={candidateService.getAll} />
     </div>
   );
 }

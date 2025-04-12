@@ -35,53 +35,66 @@
     @apply font-['Poiret_One'] text-xl
 }
 
+.main-div {
+    @apply flex flex-col h-screen bg-base-300
+}
+
+.scroll-content-div {
+    @apply m-5 overflow-y-auto shadow-2xl shadow-neutral-950 border-b-3 border-t-3 border-info-content rounded-xl
+}
+
+.scroll-content-div-corner {
+    @apply m-5 overflow-y-auto shadow-2xl shadow-neutral-950 border-l-3 border-t-3 border-info-content rounded-xl
+}
+
 .table-scale {
-    @apply w-full h-full border-separate border-spacing-y-5 p-10
+    @apply font-[roboto] w-full h-full border-separate border-spacing-y-2 p-5 pt-0
 }
-
 .td-scale {
-    @apply text-lg text-left p-8 whitespace-nowrap border-spacing-0;
+    @apply text-sm text-left p-4 whitespace-nowrap;
+    @apply border-t-2 border-t-transparent border-b-2 border-b-transparent;
 }
-
 .th-scale {
     @apply sticky text-lg top-0 bg-info-content text-left p-2 whitespace-nowrap z-10 min-w-[15rem];
-    @apply border-2 border-transparent hover:bg-accent-content hover:border-accent transition-all
+    @apply border-2 border-transparent hover:bg-accent-content hover:border-accent transition-all;
+}
+.tr-scale {
+    @apply bg-base-100 hover:border-2 border-accent hover:bg-accent-content transition-all duration-100 ease-in-out;
 }
 
-.table-scale tr td:first-child{
-    @apply border-t-2 border-t-transparent border-l-2 border-l-transparent;
-    border-top-left-radius: 30px;
-    border-bottom-left-radius: 30px;
+/* Alternate Colors */
+.tr-scale:nth-child(even) {
+    @apply bg-base-200 hover:bg-accent-content
+}
+.th-scale:nth-child(even) {
+    @apply bg-[#002641] hover:bg-accent-content
 }
 
-.table-scale tr td:last-child {
+/* Rounded Rows */
+.td-scale:first-child {
+    @apply border-t-2 border-t-transparent border-l-2 border-l-transparent pl-10;
+    @apply rounded-tl-xl rounded-bl-xl;
+}
+.td-scale:last-child {
     @apply border-b-2 border-b-transparent border-r-2 border-r-transparent;
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
+    @apply rounded-tr-xl rounded-br-xl;
 }
 
-.table-scale tr th:first-child {
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-}
-
-.table-scale tr th:last-child {
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-}
-
-.table-scale tr:hover td:first-child{
+/* Row Hover Border */
+.tr-scale:hover .td-scale:first-child {
     @apply border-t-2 border-t-accent border-l-2 border-l-accent;
 }
-
-.table-scale tr:hover td:last-child {
+.tr-scale:hover .td-scale:last-child {
     @apply border-b-2 border-b-accent border-r-2 border-r-accent;
 }
-
-.table-scale tr td {
-    @apply border-t-2 border-t-transparent border-b-2 border-b-transparent
+.tr-scale:hover .td-scale {
+    @apply border-t-2 border-t-accent border-b-2 border-b-accent
 }
 
-.table-scale tr:hover td {
-    @apply border-t-2 border-t-accent border-b-2 border-b-accent
+/* Rounded Header-Row */
+.th-scale:first-child {
+    @apply rounded-tl-xl rounded-bl-xl pl-10;
+}
+.th-scale:last-child {
+    @apply rounded-tr-xl rounded-br-xl;
 }

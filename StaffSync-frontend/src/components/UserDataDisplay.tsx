@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
-import DynamicForm, { APIKeyValues } from './DynamicForm';
+import DynamicForm from './DynamicForm';
 import Header from './PageHeader/Header';
 import { Column } from './DataTable';
 import { AxiosResponse } from 'axios';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import LinkedDropdown from './PageHeader/LinkedDropdown';
 import { BeakerIcon } from '@heroicons/react/24/outline';
+import { APIKeyValues } from './FetchResult';
 
 interface UserDataProps {
     userType: string;
@@ -16,9 +17,7 @@ interface UserDataProps {
 }
 
 function UserDataDisplay({ userType, allUserColumns, apiGetById, apiUpdateData }: UserDataProps) {
-
     const location = useLocation();
-    const searchParam = new URLSearchParams(location.search);
 
     const [id, setId] = useState<number>(-1);
 
@@ -29,13 +28,13 @@ function UserDataDisplay({ userType, allUserColumns, apiGetById, apiUpdateData }
     }
 
     useEffect(() => {
-
+        const searchParam = new URLSearchParams(location.search);
         const paramId = searchParam.get("id");
         if (paramId) {
             setId(parseInt(paramId));
         }
 
-    }, []);
+    }, [location]);
 
     if (id == -1) {
         return (
@@ -48,7 +47,7 @@ function UserDataDisplay({ userType, allUserColumns, apiGetById, apiUpdateData }
     }
 
     return (
-        <div className="flex flex-col h-screen bg-base-300">
+        <div className="main-div">
             <Header />
             <div className="w-full flex flex-col">
                 <div className="flex justify-between items-center p-2 sticky top-0 z-10">
@@ -63,7 +62,7 @@ function UserDataDisplay({ userType, allUserColumns, apiGetById, apiUpdateData }
                                     btns: [
                                         {
                                             name: "View Salary",
-                                            link: `/employee/salary?id=${id}`
+                                            link: `/employee/salary/data?id=${id}`
                                         }
                                     ]
                                 }

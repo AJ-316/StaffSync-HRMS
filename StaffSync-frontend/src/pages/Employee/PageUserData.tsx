@@ -1,6 +1,5 @@
-import { allColumns as allEmployeeColumns, getEmployeeById, updateEmployee } from '../../services/employeeService';
-import { allColumns as allCandidateColumns, getCandidateById, updateCandidate } from '../../services/candidateService';
 import UserDataDisplay from '../../components/UserDataDisplay';
+import { candidateService, columnConfig, employeeService } from '../../services/apiService';
 
 interface UserDataProps {
     userType: string;
@@ -8,9 +7,9 @@ interface UserDataProps {
 
 function PageUserData({ userType }: UserDataProps) {
 
-    const allUserColumns = userType === "employee" ? allEmployeeColumns : allCandidateColumns;
-    const apiGetById = userType === "employee" ? getEmployeeById : getCandidateById;
-    const apiUpdateData = userType === "employee" ? updateEmployee : updateCandidate;
+    const allUserColumns = userType === "employee" ? columnConfig.employee : columnConfig.candidate;
+    const apiGetById = userType === "employee" ? employeeService.getById : candidateService.getById;
+    const apiUpdateData = userType === "employee" ? employeeService.update : candidateService.update;
 
     return (
         <UserDataDisplay

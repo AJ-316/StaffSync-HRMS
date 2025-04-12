@@ -16,6 +16,7 @@ import PageAttendance from './pages/Employee/PageAttendance';
 import PagePerformance from './pages/Employee/PagePerformance';
 import PageSalary from './pages/Employee/PageSalary';
 import PageUserData from './pages/Employee/PageUserData';
+import PageSalaryData from './pages/Employee/PageSalaryData';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
         <Route path="/employee/attendance" element={<PageAttendance />} />
         <Route path="/employee/performance" element={<PagePerformance />} />
         <Route path="/employee/salary" element={<PageSalary />} />
+        <Route path="/employee/salary/data" element={<PageSalaryData />} />
         <Route path="/employee/data" element={<PageUserData userType={'employee'} />} />
         <Route path="/candidate/data" element={<PageUserData userType={'candidate'} />} />
         <Route path="/engagement/meetings" element={<PageMeetings />} />

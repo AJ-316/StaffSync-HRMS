@@ -67,7 +67,7 @@ export const useFetchAll = (
             if (!response.data.success) throw new Error();
             setDataList(response.data.data);
         } catch (err) {
-            console.error("Failed to fetch data:", err);
+            console.error("Failed to fetch data:", err, "for:", apiGetAll);
             dataResultMsg = dataResultMsg.length === 0 ? ": API Connection Failed" : dataResultMsg;
             setError("Failed to fetch data" + dataResultMsg);
         } finally {
