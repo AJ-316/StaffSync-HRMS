@@ -17,7 +17,7 @@ public class Welfare {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "welfare_id")
-    private int welfareId;
+    private Integer welfareId;
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false, foreignKey = @ForeignKey(name = "fk_welfare_employee",

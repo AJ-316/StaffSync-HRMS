@@ -19,7 +19,7 @@ public class Training {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "training_id")
-    private int trainingId;
+    private Integer trainingId;
 
     @Column(name = "name", nullable = false, length = 255)
     private String name;

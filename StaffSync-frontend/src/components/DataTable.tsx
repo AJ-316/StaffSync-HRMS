@@ -1,16 +1,10 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
 import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
-import { APIKeyValues, useFetchAll } from "./FetchResult";
 import LoadState from "./LoadState";
 import { EyeDropperIcon } from "@heroicons/react/24/solid";
-import { extractPartialList, getNestedValueOrElse } from "../services/apiService";
-
-export type Column = {
-    label: string;
-    accessor: string;
-};
+import { APIKeyValues, Column, getNestedValueOrElse, useFetchData } from "../services/apiService";
 
 type TableProps = {
     allColumns: Column[];
@@ -23,8 +17,15 @@ type TableProps = {
 const DataTable = ({ allColumns, selectedColumns, apiGetAll, navigationHolder }: TableProps) => {
     const navigate = useNavigate();
 
-    const { dataList, loading, error } = useFetchAll(apiGetAll);
-    const partiaDatalList = useMemo(() => extractPartialList(dataList, allColumns), [dataList, allColumns]);
+    const {
+        dataList,
+        loading,
+        error,
+        partialList
+    } = useFetchData({
+        apiFn: apiGetAll,
+        columnConfig: allColumns
+    });
 
     const [searchValues, setSearchValues] = useState<APIKeyValues>({});
 
@@ -34,12 +35,13 @@ const DataTable = ({ allColumns, selectedColumns, apiGetAll, navigationHolder }:
         setSearchValues((prev) => ({ ...prev, [accessor]: value }));
     };
 
-    const filteredDatas = partiaDatalList.filter((data: unknown) =>
+    const filteredDatas = Array.isArray(partialList) && partialList !== undefined
+    ? partialList.filter((data: unknown) =>
         Object.entries(searchValues).every(([accessor, value]) => {
             const dataValue = getNestedValueOrElse(data, accessor, '-');
             return String(dataValue).toLowerCase().includes(value.toLowerCase());
         })
-    );
+    ) : [];
 
     return (
         <div className={`scroll-content-div-corner h-full`}>
@@ -87,7 +89,7 @@ const DataTable = ({ allColumns, selectedColumns, apiGetAll, navigationHolder }:
 
                     {<tbody className="overflow-hidden">
 
-                        {filteredDatas.map((dat, index) => (
+                        {Array.isArray(dataList) && dataList !== undefined && filteredDatas.map((dat, index) => (
                             <tr key={index}
                                 className="tr-scale"
                                 onClick={() => { navigate(`/${navigationHolder}/data?id=${dataList[index].id}`)?.then(() => window.location.reload()); }}

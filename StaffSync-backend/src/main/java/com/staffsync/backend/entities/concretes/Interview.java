@@ -17,7 +17,7 @@ public class Interview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "interview_id")
-    private int interviewId;
+    private Integer interviewId;
 
     @OneToOne
     @JoinColumn(name = "candidate_id", unique = true, nullable = false,

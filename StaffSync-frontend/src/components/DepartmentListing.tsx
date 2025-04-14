@@ -1,63 +1,60 @@
-import { useState } from "react"
+import { useContext } from "react";
+import { ListingDropdownContext } from "../pages/Recruitment/PageJobListings";
 import Combobox from "./Combobox";
-import Separator from "./Separator";
-import ProfileListing from "./ProfileListing";
-import { APIKeyValues } from "./FetchResult";
+import ProfileListing, { ProfileData } from "./ProfileListing";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+
+export type DepartmentData = {
+    key: string;
+    id: string;
+    name: string;
+    profiles: ProfileData[];
+};
 
 interface DepartmentListingProps {
-    onAddDepartment: () => void;
-    onCreateDepartment: (newName: string) => void;
-    departmentList: APIKeyValues;
+    departmentData: DepartmentData;
 }
 
-function DepartmentListing({ onAddDepartment, onCreateDepartment, departmentList }: DepartmentListingProps) {
+function DepartmentListing({ departmentData }: DepartmentListingProps) {
 
-    const [profiles, setProfiles] = useState(["0"]);
-    const [profileList, setProfileList] = useState<APIKeyValues>({
-        "1": "PEngineering",
-        "2": "PMarketing",
-        "3": "PFinance",
-        "4": "PHR"
-    });
-    const [isActive, setIsActive] = useState<boolean>(true)
-
-    const handleAddDepartment = () => {
-        setIsActive(false);
-        onAddDepartment();
-    }
-
-    const onCreateProfile = (newName: string) => {
-
-        // new department id returned from backend
-        const id = Object.values(profileList).length + 1;
-        console.log("Adding", newName, "to", id)
-        setProfileList((prevList) => ({
-            ...prevList, [id]: newName,
-        }));
-    };
-
-    const onAddProfile = () => {
-        setProfiles([...profiles, `${profiles.length}`])
-    }
+    const { departmentList, onAddProfile, onRemoveDepartment, onCreateDepartment, onSelectDepartment } = useContext(ListingDropdownContext);
 
     return (
         <div className="m-2">
             <div className="flex items-center">
-                <label className="p-2">Department:</label>
-                <Combobox options={departmentList} onAddOption={onCreateDepartment} />
+                <button
+                    title="Remove Department"
+                    type="button"
+                    className="btn btn-error btn-soft btn-square m-2"
+                    onClick={() => onRemoveDepartment(departmentData.key)}
+                >
+                    <XMarkIcon className="w-6 h-6" />
+                </button>
+                <Combobox
+                    dropDownTitle="Department:"
+                    options={departmentList}
+                    emptyOptionsErrorText={"Add Departments..."}
+                    onAddOption={onCreateDepartment}
+                    onSelectOption={(k, v) => onSelectDepartment(departmentData.key, k, v)}
+                />
+                <button
+                    type="button"
+                    className="btn btn-accent btn-soft m-2 mr-auto"
+                    onClick={() => onAddProfile(departmentData.key)}
+                >
+                    Add Profile
+                </button>
             </div>
             <div>
-                {profiles.map((prop, key) => 
+                {departmentData.profiles.map((prop, key) =>
                     <ProfileListing
                         key={key}
-                        onAddProfile={onAddProfile}
-                        onCreateProfile={onCreateProfile}
-                        profileList={profileList}
+                        departmentId={departmentData.id}
+                        departmentKey={departmentData.key}
+                        profileData={prop}
                     />
                 )}
             </div>
-            <Separator classes={"ml-[5%] mr-[5%]"} />
-            {isActive && <button className="btn btn-accent btn-soft m-2" onClick={handleAddDepartment}>Add Department</button>}
         </div >
     )
 }

@@ -19,7 +19,7 @@ public class InterviewRound {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "round_id")
-    private int roundId;
+    private Integer roundId;
 
     @ManyToOne
     @JoinColumn(name = "interview_id", nullable = false,
@@ -29,7 +29,7 @@ public class InterviewRound {
     private Interview interview;
 
     @Column(name = "round_number", nullable = false)
-    private int roundNumber;
+    private Integer roundNumber;
 
     @Column(name = "interviewer")
     private String interviewer;

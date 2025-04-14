@@ -17,7 +17,7 @@ public class Performance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "performance_id")
-    private int performanceId;
+    private Integer performanceId;
 
     @OneToOne
     @JoinColumn(name = "employee_id", nullable = false,
@@ -30,7 +30,7 @@ public class Performance {
     private double kpiScore;
 
     @Column(name = "total_training_attendance", nullable = false, columnDefinition = "INT DEFAULT 0")
-    private int totalTrainingAttendance;
+    private Integer totalTrainingAttendance;
 
     @Column(name = "total_attendance_performance", nullable = false, columnDefinition = "DECIMAL(5,2) DEFAULT 0")
     private double totalAttendancePerformance;

@@ -1,10 +1,26 @@
 @import "tailwindcss";
 @plugin "daisyui";
+@plugin "@tailwindcss/typography";
 
 @layer base {
     html {
         @apply overflow-hidden m-0 /* text-[0.6rem] sm:text-[0.6rem] md:text-[0.8rem] lg:text-[1rem] xl:text-[1rem] 2xl:text-[1rem] */ scroll-auto;
     }
+}
+
+.prose p {
+    margin: 0;
+}
+
+.radio-ping:checked::after {
+    content: '';
+    position: absolute;
+    top: 12%;
+    left: 12%;
+    width: 75%;
+    height: 75%;
+    border-radius: 9999px;
+    @apply animate-ping bg-success
 }
 
 .icon-visible .icon-v {

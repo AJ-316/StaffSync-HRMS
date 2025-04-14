@@ -1,22 +1,29 @@
 import { useState, useEffect } from "react";
 import { AxiosResponse } from "axios";
-import { Column } from "./DataTable";
-import { APIKeyValues, useFetchById } from "./FetchResult";
 import LoadState from "./LoadState";
 import { PaperAirplaneIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { getNestedValue, useMutablePartialData } from "../services/apiService";
+import { APIKeyValues, Column, getNestedValue, isArrayOfAPIKeyValues, useFetchData } from "../services/apiService";
 
 type DataProps = {
     id: number;
     allColumns: Column[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    apiGetById: (id: number) => (Promise<AxiosResponse<any, any>>);
+    apiGetById: (id: number | undefined) => (Promise<AxiosResponse<any, any>>);
     onSubmit: (formValues: APIKeyValues) => (Promise<void>);
 };
 
 const DynamicForm = ({ id, allColumns, apiGetById, onSubmit }: DataProps) => {
-    const { dataList, loading, error } = useFetchById(id, apiGetById);
-    const { partialData, rawData, updateField } = useMutablePartialData(dataList, allColumns);
+    const {
+        dataList: rawData, 
+        loading, 
+        error, 
+        partialList: partialData, 
+        updateField
+    } = useFetchData({
+        id:id, 
+        apiFn: apiGetById,
+        columnConfig: allColumns
+    });
 
     const [isEditable, setIsEditable] = useState<boolean>(false);
 
@@ -29,7 +36,7 @@ const DynamicForm = ({ id, allColumns, apiGetById, onSubmit }: DataProps) => {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        if (isEditable && dataList) {
+        if (isEditable && rawData && !isArrayOfAPIKeyValues(rawData)) {
             setIsEditable(false);
             onSubmit(rawData);
         }
@@ -40,7 +47,7 @@ const DynamicForm = ({ id, allColumns, apiGetById, onSubmit }: DataProps) => {
     }, [isEditable]);
 
     return (
-        <div className="scroll-content-div-corner">
+        <div className="scroll-content-div-corner h-fit">
             <LoadState error={error} loading={loading} />
 
             {!error && !loading &&

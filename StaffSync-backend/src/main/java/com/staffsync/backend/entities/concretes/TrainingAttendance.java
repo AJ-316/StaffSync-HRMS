@@ -17,7 +17,7 @@ public class TrainingAttendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "training_id", nullable = false, foreignKey = @ForeignKey(name = "fk_training_attendance_training",

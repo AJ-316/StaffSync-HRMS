@@ -35,6 +35,7 @@ const ET = () => {
       try {
         const res = await axios.get("http://localhost:8080/api/employee/get");
         setEmployees(res.data);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         setError("Failed to fetch employee data.");
       } finally {

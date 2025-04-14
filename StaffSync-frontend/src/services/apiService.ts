@@ -1,14 +1,12 @@
-import axios from "axios";
-import { APIKeyValues } from "../components/FetchResult";
+import axios, { AxiosResponse } from "axios";
 import { useEffect, useMemo, useState } from "react";
-import { Column } from "../components/DataTable";
 import { cloneDeep, set } from "lodash";
 
 const API_URL = 'http://localhost:8080/api/';
 
 export const createApiService = (baseURL: string) => ({
     getAll: () => axios.get(`${API_URL}${baseURL}/getall`),
-    getById: (id: number) => axios.get(`${API_URL}${baseURL}/getbyid?id=${id}`),
+    getById: (id: number | undefined) => axios.get(`${API_URL}${baseURL}/getbyid?id=${id}`),
     add: (data: unknown) => axios.post(`${API_URL}${baseURL}/add`, data),
     update: (data: unknown) => axios.post(`${API_URL}${baseURL}/update`, data),
     delete: (id: number) => axios.post(`${API_URL}${baseURL}/delete`, { id }),
@@ -17,6 +15,8 @@ export const createApiService = (baseURL: string) => ({
 export const employeeService = createApiService("employee");
 export const candidateService = createApiService("candidate");
 export const salaryService = createApiService("employee/salary");
+export const profileService = createApiService("profile");
+export const departmentService = createApiService("department");
 
 // columnConfig.ts
 export const columnConfig = {
@@ -64,6 +64,38 @@ export const columnConfig = {
     ],
 };
 
+export type Column = {
+    label: string;
+    accessor: string;
+};
+
+export interface APIKeyValues {
+    [key: string]: string;
+}
+
+type FetchDataResult = {
+    dataList: APIKeyValues | APIKeyValues[];
+    partialList?: APIKeyValues | APIKeyValues[];
+    loading: boolean;
+    error: string | null;
+    updateField: (accessor: string, value: string) => void;
+    refetch: () => void;
+};
+
+type UseFetchDataProps = {
+    id?: number;
+    isList?: boolean;
+    columnConfig?: Column[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    apiFn: (id?: number) => Promise<AxiosResponse<any>>;
+};
+
+
+export interface MutableDataProps {
+    rawData: APIKeyValues;
+    updateField: (accessor: string, value: string) => void;
+}
+
 export interface MutablePartialDataProps {
     partialData: APIKeyValues;
     rawData: APIKeyValues;
@@ -75,52 +107,105 @@ export interface PartialDataProps {
     rawData: APIKeyValues;
 }
 
-export function useMutablePartialData(data: APIKeyValues, columns: Column[]): MutablePartialDataProps {
-    const [rawData, setRawData] = useState<APIKeyValues>(data);
-
-    useEffect(() => {
-        setRawData(data);
-    }, [data])
-
-    const partialData = useMemo(() => {
-        const values: APIKeyValues = {};
-        columns.forEach(col => {
-            set(values, col.accessor, getNestedValue(rawData, col.accessor) || "");
-        });
-        return values;
-    }, [rawData, columns]);
-
-    const updateField = (accessor: string, value: string) => {
-        const updated = cloneDeep(rawData);
-        set(updated, accessor, value);
-        setRawData(updated);
-    };
-
-    return { partialData, rawData, updateField };
-}
-
-export function usePartialData(data: APIKeyValues, columns: Column[]): PartialDataProps {
-    const [rawData, setRawData] = useState<APIKeyValues>(data);
-
-    useEffect(() => {
-        setRawData(data);
-    }, [data])
-
-    const partialData = useMemo(() => extractPartialData(rawData, columns), [rawData, columns]);
-
-    return { partialData, rawData };
-}
-
-export const extractPartialData = (data: APIKeyValues, columns: Column[]): APIKeyValues => {
-    const values: APIKeyValues = {};
-    columns.forEach(col => {
-        set(values, col.accessor, getNestedValue(data, col.accessor) || "");
-    });
-    return values;
+export const isArrayOfAPIKeyValues = ( data: APIKeyValues | APIKeyValues[]
+): data is APIKeyValues[] => {
+    return Array.isArray(data);
 };
 
-export const extractPartialList = (list: APIKeyValues[], columns: Column[]): APIKeyValues[] => {
-    return list.map(item => extractPartialData(item, columns));
+export const useFetchData = ({
+    id,
+    isList = false,
+    columnConfig,
+    apiFn,
+}: UseFetchDataProps): FetchDataResult => {
+    const [dataList, setDataList] = useState<APIKeyValues | APIKeyValues[]>(
+        isList ? [] : {}
+    );
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchData = async () => {
+        let dataResultMsg = "";
+        try {
+            const response = await apiFn(id);
+            dataResultMsg = ": " + response.data.message;
+            if (!response.data.success) throw new Error();
+            setDataList(response.data.data);
+            console.log("Fetched data", response.data);
+        } catch (err) {
+            console.error("Failed to fetch data:", err);
+            dataResultMsg = dataResultMsg.length === 0 ? ": API Connection Failed" : dataResultMsg;
+            setError("Failed to fetch data" + dataResultMsg);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const updateField = (accessor: string, value: string, checkKey?: string) => {
+        const updated = cloneDeep(dataList);
+    
+        if (Array.isArray(updated)) {
+            if(!checkKey) {
+                console.warn("updateField: key required for list updates");
+                return;
+            }
+
+            const [key, keyValue] = checkKey.split(":");
+            if (!key || !keyValue) {
+                console.warn("updateField: invalid checkKey format");
+                return;
+            }
+            
+            const itemIndex = updated.findIndex((item) => item[key[0]] === key[1]);
+            if (itemIndex === -1) {
+                console.warn("updateField: item with the specified id not found");
+                return;
+            }
+            
+            set(updated[itemIndex], accessor, value);
+        } else {
+
+            set(updated, accessor, value);
+        }
+    
+        setDataList(updated);
+    };
+    
+    const partialList = useMemo(() => {
+        if (!columnConfig) return undefined;
+
+        if (Array.isArray(dataList)) {
+            return dataList.map(item => {
+                const partial: APIKeyValues = {};
+                columnConfig.forEach(col => {
+                    set(partial, col.accessor, getNestedValue(item, col.accessor) || "");
+                });
+                return partial;
+            });
+        } else {
+            const partial: APIKeyValues = {};
+            columnConfig.forEach(col => {
+                set(partial, col.accessor, getNestedValue(dataList, col.accessor) || "");
+            });
+            return partial;
+        }
+    }, [dataList, columnConfig]);
+
+
+    useEffect(() => {
+        fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return {
+        dataList,
+        partialList,
+        loading,
+        error,
+        updateField,
+        refetch: fetchData,
+    };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

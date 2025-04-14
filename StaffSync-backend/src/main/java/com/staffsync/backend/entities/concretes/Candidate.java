@@ -17,7 +17,7 @@ public class Candidate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "candidate_id")
-    private int candidateId;
+    private Integer candidateId;
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true, nullable = true, foreignKey = @ForeignKey(name = "fk_candidate_user", value = ConstraintMode.CONSTRAINT, foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE"))

@@ -2,17 +2,16 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import DynamicForm from './DynamicForm';
 import Header from './PageHeader/Header';
-import { Column } from './DataTable';
 import { AxiosResponse } from 'axios';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import LinkedDropdown from './PageHeader/LinkedDropdown';
 import { BeakerIcon } from '@heroicons/react/24/outline';
-import { APIKeyValues } from './FetchResult';
+import { APIKeyValues, Column } from '../services/apiService';
 
 interface UserDataProps {
     userType: string;
     allUserColumns: Column[]
-    apiGetById: (id: number) => (Promise<AxiosResponse<unknown, unknown>>);
+    apiGetById: (id: number | undefined) => (Promise<AxiosResponse<unknown, unknown>>);
     apiUpdateData: (user: unknown) => (Promise<AxiosResponse<unknown, unknown>>);
 }
 

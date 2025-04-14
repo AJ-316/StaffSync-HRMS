@@ -19,7 +19,7 @@ public class Salary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "salary_id")
-    private int id;
+    private Integer id;
 
     @OneToOne
     @JoinColumn(name = "employee_id", nullable = false)

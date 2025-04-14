@@ -19,7 +19,7 @@ public class Asset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "asset_id")
-    private int assetId;
+    private Integer assetId;
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false, foreignKey = @ForeignKey(name = "fk_asset_employee",

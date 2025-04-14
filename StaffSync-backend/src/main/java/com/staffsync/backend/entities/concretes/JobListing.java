@@ -19,7 +19,7 @@ public class JobListing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "job_id")
-    private int jobId;
+    private Integer jobId;
 
     @ManyToOne
     @JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = true)
@@ -33,7 +33,7 @@ public class JobListing {
     private String jobDescription;
 
     @Column(name = "candidate_count", nullable = false)
-    private int candidateCount;
+    private Integer candidateCount;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

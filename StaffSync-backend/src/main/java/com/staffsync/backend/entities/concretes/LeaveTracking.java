@@ -17,7 +17,7 @@ public class LeaveTracking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "leave_id")
-    private int leaveId;
+    private Integer leaveId;
 
     @OneToOne
     @JoinColumn(name = "employee_id", nullable = false,
@@ -27,15 +27,15 @@ public class LeaveTracking {
     private Employee employee;
 
     @Column(name = "total_leaves", nullable = false)
-    private int totalLeaves;
+    private Integer totalLeaves;
 
     @Column(name = "leaves_taken", nullable = false)
-    private int leavesTaken = 0;
+    private Integer leavesTaken = 0;
 
     @Column(name = "present_days", nullable = false)
-    private int presentDays = 0;
+    private Integer presentDays = 0;
 
-    public int getRemainingLeaves() {
+    public Integer getRemainingLeaves() {
         return totalLeaves - leavesTaken; // Simulating stored generated column
     }
 }
