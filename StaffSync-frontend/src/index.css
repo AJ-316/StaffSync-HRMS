@@ -8,6 +8,95 @@
     }
 }
 
+.wave-body {
+    background-image: linear-gradient(
+        50deg,
+        var(--color-base-300),
+        var(--color-accent-content),
+        var(--color-info-content),
+        var(--color-base-300)
+    );
+    background-size: 400% 400%;
+    background-position: 0% 0%;
+    animation: gradient 20s ease-in-out infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0%;
+    }
+    25% {
+        background-position: 25%;
+    }
+    50% {
+        background-position: 100%;
+    }
+    75% {
+        background-position: 80%;
+    }
+    100% {
+        background-position: 0%;
+    }
+}
+
+@keyframes wave {
+    0% {
+      transform: translateX(-5%);
+    }
+    25% {
+      transform: translateX(-25%);
+    }
+    50% {
+      transform: translateX(-45%);
+    }
+    75% {
+      transform: translateX(-25%);
+    }
+    100% {
+      transform: translateX(-5%);
+    }
+}
+
+.wave {
+    @apply fixed w-[200%] h-[18em] animate-[wave_8s_-3s_ease-in-out_infinite]
+        rounded-[1000%_1000%_0_0] left-0 bottom-0 bg-base-300/25;
+    transform: translate3d(0, 0, 0);
+}
+
+.wave:nth-of-type(2) {
+    @apply bottom-[-2.25em] animate-[wave_12s_ease-in-out_reverse_infinite];
+}
+
+.wave:nth-of-type(3) {
+    @apply bottom-[-4.5em] animate-[wave_16s_-1s_reverse_infinite];
+}
+  
+/* .wave {
+    background: rgb(255 255 255 / 25%);
+    border-radius: 1000% 1000% 0 0;
+    position: fixed;
+    width: 200%;
+    height: 18em;
+    animation: wave 8s -3s linear infinite;
+    transform: translate3d(0, 0, 0);
+    opacity: 0.8;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.wave:nth-of-type(2) {
+    bottom: -2.25em;
+    animation: wave 12s linear reverse infinite;
+    opacity: 0.8;
+}
+
+.wave:nth-of-type(3) {
+    bottom: -4.5em;
+    animation: wave 16s -1s reverse infinite;
+    opacity: 0.9;
+} */
+
 .prose p {
     margin: 0;
 }

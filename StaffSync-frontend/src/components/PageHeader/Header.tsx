@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 function Header() {
     return (
         <motion.header
-            className='ticky w-full h-[100px] flex justify-between items-center bg-base-100 z-50'
+            className='ticky w-full h-[100px] flex justify-between items-center bg-base-100 z-50 shadow-2xl shadow-black/80'
             initial={{ y: -50 }}
             animate={{ y: 0 }}
         >

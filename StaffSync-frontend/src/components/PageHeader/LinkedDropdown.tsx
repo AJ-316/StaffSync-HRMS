@@ -43,7 +43,7 @@ function LinkedDropdown({ dropdownLinks }: LinkedDropdownProps) {
                         {dropdownLink.name} <ChevronDownIcon className={`w-4 h-4 ${openIndex === index ? 'rotate-180' : ''}`} />
                     </summary>
                     
-                    <ul className="menu dropdown-content bg-neutral rounded-box z-1 w-52 p-2 shadow-xl">
+                    <ul className="menu dropdown-content bg-neutral rounded-box z-1 w-52 p-2 shadow-xl shadow-black/30">
                         {dropdownLink.btns.map((btn, btnIndex) => (
                             <li className={`${btn.classes ? btn.classes : ""}`} key={btnIndex}><Link to={btn.link}>{btn.name}</Link></li>
                         ))}

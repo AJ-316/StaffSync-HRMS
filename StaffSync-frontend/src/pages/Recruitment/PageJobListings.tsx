@@ -63,7 +63,7 @@ function PageJobListings() {
         departmentDataList.forEach((department) => {
             set(newDepartmentList, department.id, department.name);
         })
-        // TODO Add one more key to departments and profile to track instances rather than id's
+        
         setDepartmentList(newDepartmentList);
         setProfileList(newProfileList)
 
