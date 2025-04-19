@@ -56,7 +56,7 @@ const DynamicForm = ({ id, allColumns, apiGetById, onSubmit }: DataProps) => {
                     <div className="flex flex-wrap -mx-2">
                         {allColumns.map((col) => (
                             <div key={col.accessor} className="w-1/3 px-2 mb-4 flex items-center">
-                                <label className="text-sm font-medium mb-1 w-1/5 text-right">
+                                <label className="text-sm font-medium mb-1 w-1/5 text-right select-none">
                                     {col.label}:
                                 </label>
                                 <input

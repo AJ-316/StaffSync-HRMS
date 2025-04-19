@@ -10,9 +10,10 @@ interface NestedInputProps {
     name: string;
     unit: string;
     inputs: InputData[];
+    onSetValues: (values: string[]) => void
 }
 
-function NestedInput({ name, unit, inputs }: NestedInputProps) {
+function NestedInput({ name, unit, inputs, onSetValues }: NestedInputProps) {
 
     const [inputValues, setInputValues] = useState<string[]>([]);
 
@@ -23,16 +24,21 @@ function NestedInput({ name, unit, inputs }: NestedInputProps) {
         });
         setInputValues(newInputValues);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [inputs])
+    }, [])
 
     const handleInput = (value: string, index: number, input: InputData) => {
         input.inputValue = value;
 
-        setInputValues(prev => {
+        const newInputValues = [...inputValues];
+        newInputValues[index] = value;
+        onSetValues(newInputValues);
+        setInputValues(newInputValues);
+        
+        /* setInputValues(prev => {
             const newInputValues = [...prev];
             newInputValues[index] = value;
             return newInputValues;
-        });
+        }); */
     }
 
     return (

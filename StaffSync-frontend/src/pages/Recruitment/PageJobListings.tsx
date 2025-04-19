@@ -6,14 +6,16 @@ import Header from '../../components/PageHeader/Header';
 import Separator from '../../components/Separator';
 import { APIKeyValues, departmentService, getNestedValue, isArrayOfAPIKeyValues, profileService, useFetchData } from '../../services/apiService';
 import { v7 as uuid } from 'uuid';
+import JobListingPDF from '../../components/JobListingPDF';
+import { ProfileData } from '../../components/ProfileListing';
 
 export const ListingDropdownContext = createContext<{
     departmentList: APIKeyValues;
     profileList: GroupedProfiles;
-    experienceList: string[];
     onCreateDepartment: (newName: string) => void;
     onCreateProfile: (departmentKey: string, newName: string) => void;
     onAddProfile: (departmentKey: string) => void;
+    onUpdateProfile: (departmentKey: string, newProfile: ProfileData) => void;
     onRemoveProfile: (departmentKey: string, profileKey: string) => void;
     onRemoveDepartment: (departmentKey: string) => void;
     onSelectDepartment: (departmentKey: string, optionKey: string | null, optionValue: string) => void;
@@ -21,10 +23,10 @@ export const ListingDropdownContext = createContext<{
 }>({
     departmentList: {},
     profileList: {},
-    experienceList: [],
     onCreateDepartment: () => { },
     onCreateProfile: () => { },
     onAddProfile: () => { },
+    onUpdateProfile: () => { },
     onRemoveProfile: () => { },
     onRemoveDepartment: () => { },
     onSelectDepartment: () => { },
@@ -44,7 +46,6 @@ function PageJobListings() {
 
     const [departmentList, setDepartmentList] = useState<APIKeyValues>({});
     const [profileList, setProfileList] = useState<GroupedProfiles>({});
-    const [experienceList, setExperienceList] = useState(["0 Yrs"])
 
     useEffect(() => {
         if (!isArrayOfAPIKeyValues(profileDataList) || !isArrayOfAPIKeyValues(departmentDataList)) return;
@@ -56,6 +57,7 @@ function PageJobListings() {
             const profileId = getNestedValue(profile, "id");
             const profileName = getNestedValue(profile, "name");
 
+            // add profile to group of its department
             if (!newProfileList[deptId]) newProfileList[deptId] = {};
             newProfileList[deptId][profileId] = profileName;
         });
@@ -63,7 +65,7 @@ function PageJobListings() {
         departmentDataList.forEach((department) => {
             set(newDepartmentList, department.id, department.name);
         })
-        
+
         setDepartmentList(newDepartmentList);
         setProfileList(newProfileList)
 
@@ -87,7 +89,7 @@ function PageJobListings() {
         setDepartments(prev => prev.map((department) =>
             department.key === departmentKey
                 ? (optionKey ? { ...department, id: optionKey, name: optionValue }
-                    : { ...department, id:"null", name: "" }) : department
+                    : { ...department, id: "null", name: "" }) : department
         ))
     };
 
@@ -99,12 +101,27 @@ function PageJobListings() {
                     ...department,
                     profiles: department.profiles.map((profile) => {
                         return profile.key !== profileKey ? profile :
-                        (optionKey ? { key:profile.key, id: optionKey, name: optionValue }
-                            : { key:profile.key, id: "null", name: "" })
+                            (optionKey ? { ...profile, key: profile.key, id: optionKey, name: optionValue }
+                                : { ...profile, key: profile.key, id: "null", name: "" })
                     })
                 }
         ))
     };
+
+    const onUpdateProfile = (departmentKey: string, newProfile: ProfileData) => {
+        const newDepartments = departments.map((department) => {
+            if(department.key === departmentKey) {
+                return {...department, profiles: department.profiles.map((profile) => {
+                    if(profile.key === newProfile.key) {
+                        return newProfile;
+                    }
+                    return profile;
+                })}
+            }
+            return department;
+        })
+        setDepartments(newDepartments);
+    }
 
     const onAddDepartment = () => {
         // adding an empty dropdown
@@ -160,7 +177,12 @@ function PageJobListings() {
                     ...deparment, profiles: [...deparment.profiles, {
                         key: uuid(),
                         id: "null",
-                        name: "",
+                        name: "", //profileList[departmentId]?.[Object.keys(profileList[departmentId])[0]] || ""
+                        vacancy: "0",
+                        experience: "0+ years",
+                        jobDescription: "",
+                        responsibilities: "",
+                        requirements: "",
                     }]
                 }
             }
@@ -168,10 +190,10 @@ function PageJobListings() {
         }))
     }
 
- 
-
     const onSubmit = () => {
-        console.log(departments);
+        console.log("departments", departments);
+        console.log("departmentList", departmentList);
+        console.log("profileList", profileList);
     }
 
     return (
@@ -180,11 +202,11 @@ function PageJobListings() {
             <InnerHead
                 title={'Job Listing'}
                 desc={['Job listing made easy with StaffSync', 'Create job lists and download for use']}
-                content={undefined}
+                content={<JobListingPDF departments={departments} disabled={departments.length === 0} />}
             />
             <form className='scroll-content-div p-5 h-full'>
                 <ListingDropdownContext.Provider value={{
-                    departmentList, profileList, onRemoveProfile, experienceList,
+                    departmentList, profileList, onRemoveProfile, onUpdateProfile,
                     onCreateDepartment, onCreateProfile,
                     onAddProfile, onSelectDepartment,
                     onSelectProfile, onRemoveDepartment
@@ -199,8 +221,21 @@ function PageJobListings() {
                         </div>
                     )}
                 </ListingDropdownContext.Provider>
-                <button type="button" className="btn btn-accent btn-soft m-2 block w-full" onClick={onAddDepartment}>Add Department</button>
-                <button type="submit" className="btn btn-accent btn-soft m-2 block w-full" onClick={(e) => { e.preventDefault(); onSubmit(); }}>Submit</button>
+                <button
+                    type="button"
+                    className="btn btn-accent btn-soft m-2 block w-full"
+                    onClick={onAddDepartment}
+                >
+                    Add Department
+                </button>
+                {/* <button
+                    type="submit"
+                    className="btn btn-accent btn-soft m-2 block w-full"
+                    onClick={(e) => { e.preventDefault(); onSubmit(); }}
+                    disabled={departments.length === 0}
+                >
+                    Submit
+                </button> */}
             </form>
         </div>
     )

@@ -17,11 +17,12 @@ interface MarkdownTextArea {
 interface MultiMarkdownCardProps {
     titles: string[];
     selectedCard: string;
+    onInputChange: (key: string, value: string) => void;
 }
 
 type MarkdownInsertType = "surround" | "prefix" | "line";
 
-const MultiMarkdownCard = ({ titles, selectedCard }: MultiMarkdownCardProps) => {
+const MultiMarkdownCard = ({ onInputChange, titles, selectedCard }: MultiMarkdownCardProps) => {
 
     const [textAreas, setTextAreas] = useState<MarkdownTextArea[]>([]);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -46,7 +47,9 @@ const MultiMarkdownCard = ({ titles, selectedCard }: MultiMarkdownCardProps) => 
         }));
     }, [selectedCard])
 
-    const handleInput = (title: string | undefined, value: string) => {
+    const handleInput = (title: string, value: string) => {
+        onInputChange(title, value);
+
         setTextAreas(prev => prev.map((textArea) => {
             if (textArea.title === title) {
                 return { ...textArea, body: value };
@@ -96,7 +99,6 @@ const MultiMarkdownCard = ({ titles, selectedCard }: MultiMarkdownCardProps) => 
         >
             {styledIcon}
         </button>
-
     }
 
     const insertMarkdownElement = (element: string, type: MarkdownInsertType) => {
@@ -127,28 +129,34 @@ const MultiMarkdownCard = ({ titles, selectedCard }: MultiMarkdownCardProps) => 
 
             case "prefix":
                 // Get line start
-                { const lineStart = original.lastIndexOf("\n", start - 1) + 1;
-                updatedText =
-                    original.slice(0, lineStart) +
-                    element +
-                    original.slice(lineStart);
-                newCursorPos = start + element.length;
-                break; }
+                {
+                    const lineStart = original.lastIndexOf("\n", start - 1) + 1;
+                    updatedText =
+                        original.slice(0, lineStart) +
+                        element +
+                        original.slice(lineStart);
+                    newCursorPos = start + element.length;
+                    break;
+                }
 
             case "line":
                 // Insert full line above or below
-                { const insertAt = original.lastIndexOf("\n", start - 1) + 1;
-                updatedText =
-                    original.slice(0, insertAt) +
-                    element +
-                    "\n" +
-                    original.slice(insertAt);
-                newCursorPos = start + element.length + 1;
-                break; }
+                {
+                    const insertAt = original.lastIndexOf("\n", start - 1) + 1;
+                    updatedText =
+                        original.slice(0, insertAt) +
+                        element +
+                        "\n" +
+                        original.slice(insertAt);
+                    newCursorPos = start + element.length + 1;
+                    break;
+                }
 
             default:
                 return;
         }
+
+        onInputChange(textAreaData.title, updatedText);
 
         setTextAreas(prev =>
             prev.map(tA => {
@@ -166,7 +174,17 @@ const MultiMarkdownCard = ({ titles, selectedCard }: MultiMarkdownCardProps) => 
     };
 
     const getActiveTextArea = () => {
-        return textAreas.find((textArea) => { return textArea.active })
+        const textArea = textAreas.find((textArea) => { return textArea.active });
+
+        if (textArea === undefined) {
+            return {
+                title: "",
+                body: "",
+                active: false
+            }
+        }
+
+        return textArea;
     }
 
     return (

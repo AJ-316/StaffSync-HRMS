@@ -1,39 +1,40 @@
+import React, { useRef } from "react";
+import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 
 const Test = () => {
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  const generatePDF = () => {
-    const input = document.getElementById("pdf-content");
-    if(!input) return;
-  
-    html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-  
-      //.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("download.pdf");
-      alert("saved");
+  const generatePDF = async () => {
+    if (!contentRef.current) return;
+
+    const canvas = await html2canvas(contentRef.current, {
+      useCORS: true,
+      scale: 2, // High-quality output
     });
-  };
 
-  const generate = () => {
+    const imgData = canvas.toDataURL("image/png");
+
     const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
     pdf.save("download.pdf");
   };
 
   return (
-    <div>
-      <div id="pdf-content" className="p-4 bg-white">
-        <h1>My Content to Print</h1>
-        <p>This will be saved as a PDF!</p>
+    <div className="p-4">
+      <div ref={contentRef} className="p-6 bg-white rounded shadow-md text-black w-[800px]">
+        <h2 className="text-2xl font-bold">PDF Content</h2>
+        <p>This content will be exported to PDF using `html2canvas-pro` and `jsPDF`.</p>
       </div>
 
-      <button onClick={generate} className="btn btn-primary mt-4">Download PDF</button>
+      <button onClick={generatePDF} className="mt-4 btn btn-accent btn-soft">
+        Download PDF
+      </button>
     </div>
-  )
-}
+  );
+};
 
 export default Test;

@@ -9,6 +9,11 @@ export type ProfileData = {
     key: string;
     id: string;
     name: string;
+    vacancy: string;
+    experience: string;
+    jobDescription: string;
+    responsibilities: string;
+    requirements: string;
 };
 
 interface ProfileListingProps {
@@ -19,7 +24,7 @@ interface ProfileListingProps {
 
 function ProfileListing({ departmentId, departmentKey, profileData }: ProfileListingProps) {
 
-    const { profileList, onCreateProfile, onRemoveProfile, onSelectProfile } = useContext(ListingDropdownContext);
+    const { profileList, onCreateProfile, onRemoveProfile, onSelectProfile, onUpdateProfile } = useContext(ListingDropdownContext);
     const vacanciesOptions: ComboboxValues = Object.fromEntries(
         Array.from({ length: 10 }, (_, i) => [i, (i + 1).toString()])
     );
@@ -29,9 +34,41 @@ function ProfileListing({ departmentId, departmentKey, profileData }: ProfileLis
     const [selectedMarkdownCard, setSelectedMarkdownCard] = useState(descriptions[0]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value)
         setSelectedMarkdownCard(e.target.value);
     };
+
+    const updateVacancy = (values: string) => {
+        let intValue = Number.parseInt(values);
+        if(isNaN(intValue)) intValue = 0;
+
+        onUpdateProfile(departmentKey, {...profileData, vacancy: intValue.toString()});
+    }
+
+    const updateExperience = (values: string[]) => {
+        values = values.map(v => v.trim());
+        values[0] = values[0].length === 0 ? "0" : values[0];
+        values[1] = values[1].length === 0 ? "+" : values[1] === "+" ? values[1] : "-" + values[1];
+        
+        onUpdateProfile(departmentKey, {...profileData, experience: values[0] + values[1] + " years"});
+    }
+
+    const updateDescription = (key: string, value: string) => {
+        const newProfileData = {...profileData};
+        switch (key) {
+            case descriptions[0]:
+                newProfileData.jobDescription = value;
+                break;
+
+            case descriptions[1]:
+                newProfileData.responsibilities = value;
+                break;
+
+            case descriptions[2]:
+                newProfileData.requirements = value;
+                break;
+        }
+        onUpdateProfile(departmentKey, newProfileData);
+    }
 
     return (
         <div className="flex items-center border-t-1 border-b-1 bg-info-content/15 border-info-content rounded-xl m-2 mt-6 p-2">
@@ -53,15 +90,16 @@ function ProfileListing({ departmentId, departmentKey, profileData }: ProfileLis
                 />
                 <NestedInput
                     name="Experience: "
-                    unit="yrs"
+                    unit="years"
                     inputs={[{ placeholder: "0", inputValue: "0", separator: "-" }, { placeholder: "+", inputValue: "+" }]}
+                    onSetValues={updateExperience}
                 />
                 <Combobox
                     dropDownTitle="Vacancy:"
                     placeholder="Set..."
                     options={vacanciesOptions}
-                    onAddOption={(newOption) => { return } /* onCreateProfile(departmentKey, newOption) */}
-                    onSelectOption={(k, v) => { return }/* onSelectProfile(departmentKey, profileData.key, k, v) */}
+                    onAddOption={() => { return } /* onCreateProfile(departmentKey, newOption) */}
+                    onSelectOption={(_k, v) => updateVacancy(v)/* onSelectProfile(departmentKey, profileData.key, k, v) */}
                 />
 
                 <table className="grid-cols-2 border-separate border-spacing-y-4">
@@ -110,7 +148,7 @@ function ProfileListing({ departmentId, departmentKey, profileData }: ProfileLis
                     </tr>
                 </table>
             </div>
-            <MultiMarkdownCard titles={descriptions} selectedCard={selectedMarkdownCard} />
+            <MultiMarkdownCard titles={descriptions} selectedCard={selectedMarkdownCard} onInputChange={updateDescription} />
         </div >
     )
 }
