@@ -17,6 +17,7 @@ import PagePerformance from './pages/Employee/PagePerformance';
 import PageSalary from './pages/Employee/PageSalary';
 import PageUserData from './pages/Employee/PageUserData';
 import PageSalaryData from './pages/Employee/PageSalaryData';
+import PageWelfare from './pages/Employee/PageWelfare';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
         <Route path="/employee/database" element={<PageDatabase />} />
         <Route path="/employee/attendance" element={<PageAttendance />} />
         <Route path="/employee/performance" element={<PagePerformance />} />
+        <Route path="/employee/welfare/data" element={<PageWelfare />} />
         <Route path="/employee/salary" element={<PageSalary />} />
         <Route path="/employee/salary/data" element={<PageSalaryData />} />
         <Route path="/employee/data" element={<PageUserData userType={'employee'} />} />

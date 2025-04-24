@@ -20,4 +20,21 @@ public class Qualification {
 
     @Column(name = "name", nullable = false, unique = true, length = 255)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "certificate", nullable = false)
+    private Certificate certificate = Certificate.OTHER;
+
+    @Column(name = "leave_reason", columnDefinition = "MEDIUMTEXT")
+    private String leaveReason;
+
+    @Column(name = "company", length = 45)
+    private String company;
+
+    public enum Certificate {
+        TWELFTH,
+        DIPLOMA,
+        DEGREE,
+        OTHER
+    }
 }

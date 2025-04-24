@@ -9,7 +9,7 @@ export const createApiService = (baseURL: string) => ({
     getById: (id: number | undefined) => axios.get(`${API_URL}${baseURL}/getbyid?id=${id}`),
     add: (data: unknown) => axios.post(`${API_URL}${baseURL}/add`, data),
     update: (data: unknown) => axios.post(`${API_URL}${baseURL}/update`, data),
-    delete: (id: number) => axios.post(`${API_URL}${baseURL}/delete`, { id }),
+    delete: (id: number) => axios.post(`${API_URL}${baseURL}/delete?id=${id}`),
 });
 
 export const employeeService = createApiService("employee");
@@ -17,6 +17,10 @@ export const candidateService = createApiService("candidate");
 export const salaryService = createApiService("employee/salary");
 export const profileService = createApiService("profile");
 export const departmentService = createApiService("department");
+export const attendanceService = createApiService("attendance");
+export const welfareService = { ...createApiService("welfare"),
+    getByEmployeeId: (id: number | undefined) => axios.get(`${API_URL}welfare/getbyemployeeid?id=${id}`),
+};
 
 // columnConfig.ts
 export const columnConfig = {
@@ -25,6 +29,8 @@ export const columnConfig = {
         { label: "Department", accessor: "userDto.profileDto.departmentDto.name" },
         { label: "Profile", accessor: "userDto.profileDto.name" },
         { label: "Qualification", accessor: "userDto.qualificationDto.name" },
+        { label: "Previous Company", accessor: "userDto.qualificationDto.company" },
+        { label: "Leave Reason", accessor: "userDto.qualificationDto.leaveReason" },
         { label: "Marital Status", accessor: "status" },
         { label: "Join Date", accessor: "joinDate" },
         { label: "Email", accessor: "userDto.email" },
@@ -33,6 +39,19 @@ export const columnConfig = {
         { label: "Address Permenant", accessor: "userDto.addressPerm" },
     ],
     candidate: [
+        { label: "Name", accessor: "userDto.name" },
+        { label: "Department", accessor: "userDto.profileDto.departmentDto.name" },
+        { label: "Profile", accessor: "userDto.profileDto.name" },
+        { label: "Qualification", accessor: "userDto.qualificationDto.name" },
+        { label: "Previous Company", accessor: "userDto.qualificationDto.company" },
+        { label: "Leave Reason", accessor: "userDto.qualificationDto.leaveReason" },
+        { label: "Email", accessor: "userDto.email" },
+        { label: "Contact", accessor: "userDto.contactNumber" },
+        { label: "Status", accessor: "status" },
+        { label: "Interview Stage", accessor: "interviewStage" },
+        { label: "Rejection Reason", accessor: "rejectionReason" }
+    ],
+    candidateForm: [
         { label: "Name", accessor: "userDto.name" },
         { label: "Department", accessor: "userDto.profileDto.departmentDto.name" },
         { label: "Profile", accessor: "userDto.profileDto.name" },
@@ -61,6 +80,19 @@ export const columnConfig = {
         { label: "Flat deductions (₹)", accessor: "deductions" },
         { label: "Profile", accessor: "employeeDto.userDto.profileDto.name" },
         { label: "Department", accessor: "employeeDto.userDto.profileDto.departmentDto.name" },
+    ],
+    attendance: [
+        { label: "Name", accessor: "employeeDto.userDto.name" },
+        { label: "Date", accessor: "date" },
+        { label: "Time-in", accessor: "timeIn" },
+        { label: "Time-out", accessor: "timeOut" },
+        { label: "Attendance", accessor: "status" },
+        { label: "Profile", accessor: "employeeDto.userDto.profileDto.name" },
+        { label: "Department", accessor: "employeeDto.userDto.profileDto.departmentDto.name" },
+    ],
+    welfare: [
+        { label: "Name", accessor: "employeeDto.userDto.name" },
+        { label: "Welfare Description", accessor: "description" },
     ],
 };
 
@@ -107,7 +139,7 @@ export interface PartialDataProps {
     rawData: APIKeyValues;
 }
 
-export const isArrayOfAPIKeyValues = ( data: APIKeyValues | APIKeyValues[]
+export const isArrayOfAPIKeyValues = (data: APIKeyValues | APIKeyValues[]
 ): data is APIKeyValues[] => {
     return Array.isArray(data);
 };
@@ -126,6 +158,9 @@ export const useFetchData = ({
     const [error, setError] = useState<string | null>(null);
 
     const fetchData = async () => {
+        setLoading(true);
+        setError(null);
+
         let dataResultMsg = "";
         try {
             const response = await apiFn(id);
@@ -144,9 +179,9 @@ export const useFetchData = ({
 
     const updateField = (accessor: string, value: string, checkKey?: string) => {
         const updated = cloneDeep(dataList);
-    
+
         if (Array.isArray(updated)) {
-            if(!checkKey) {
+            if (!checkKey) {
                 console.warn("updateField: key required for list updates");
                 return;
             }
@@ -156,22 +191,22 @@ export const useFetchData = ({
                 console.warn("updateField: invalid checkKey format");
                 return;
             }
-            
+
             const itemIndex = updated.findIndex((item) => item[key[0]] === key[1]);
             if (itemIndex === -1) {
                 console.warn("updateField: item with the specified id not found");
                 return;
             }
-            
+
             set(updated[itemIndex], accessor, value);
         } else {
 
             set(updated, accessor, value);
         }
-    
+
         setDataList(updated);
     };
-    
+
     const partialList = useMemo(() => {
         if (!columnConfig) return undefined;
 
@@ -195,8 +230,7 @@ export const useFetchData = ({
 
     useEffect(() => {
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [id]);
 
     return {
         dataList,

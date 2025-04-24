@@ -4,6 +4,7 @@ import com.staffsync.backend.entities.concretes.Employee;
 import com.staffsync.backend.entities.concretes.User;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public record EmployeeDto(
         Integer id,
@@ -23,13 +24,15 @@ public record EmployeeDto(
 
     @Override
     public Employee toEntity() {
-        User user = userDto.toEntity();
+        User user =  Optional.ofNullable(userDto)
+                .map(UserDto::toEntity)
+                .orElse(null);
 
         Employee employee = new Employee();
-        employee.setEmployeeId(id());
-        employee.setUser(user);
-        employee.setJoinDate(joinDate());
-        employee.setStatus(status());
+        Optional.ofNullable(id()).ifPresent(employee::setEmployeeId);
+        Optional.ofNullable(user).ifPresent(employee::setUser);
+        Optional.ofNullable(joinDate()).ifPresent(employee::setJoinDate);
+        Optional.ofNullable(status()).ifPresent(employee::setStatus);
         return employee;
     }
 }

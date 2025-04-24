@@ -1,6 +1,7 @@
 package com.staffsync.backend.api.controllers;
 
 import com.staffsync.backend.entities.dtos.CandidateDto;
+import com.staffsync.backend.entities.dtos.DepartmentDto;
 import com.staffsync.backend.result.DataResult;
 import com.staffsync.backend.result.Result;
 import com.staffsync.backend.services.abstracts.CandidateService;
@@ -20,6 +21,11 @@ public class CandidateController {
         this.candidateService = candidateService;
     }
 
+    @PostMapping("/add")
+    public Result addCandidate(@RequestBody CandidateDto candidateDto) {
+        return candidateService.addCandidate(candidateDto);
+    }
+
     @GetMapping("/getall")
     public DataResult<List<CandidateDto>> getAllCandidates() {
         return candidateService.getAllCandidates();
@@ -33,5 +39,10 @@ public class CandidateController {
     @PostMapping("/update")
     public Result updateCandidate(@RequestBody CandidateDto candidateDto) {
         return candidateService.updateCandidate(candidateDto);
+    }
+
+    @PostMapping("/delete")
+    public Result deleteCandidate(@RequestParam int id) {
+        return candidateService.deleteCandidate(id);
     }
 }

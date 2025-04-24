@@ -5,15 +5,16 @@ export interface ComboboxValues {
 }
 
 interface ComboboxProps {
+    classes?: string;
     dropDownTitle: string;
     options: ComboboxValues;
     emptyOptionsErrorText?: string;
     placeholder?: string;
     onSelectOption: (selectedKey: string | null, selectedValue: string) => void;
-    onAddOption: (newOption: string) => void;
+    onAddOption?: ((newOption: string) => void) | undefined;
 }
 
-function Combobox({ dropDownTitle, options, placeholder = "Select...", emptyOptionsErrorText = placeholder, onSelectOption, onAddOption }: ComboboxProps) {
+function Combobox({ classes="", dropDownTitle, options, placeholder = "Select...", emptyOptionsErrorText = placeholder, onSelectOption, onAddOption=undefined }: ComboboxProps) {
     const [inputValue, setInputValue] = useState("");
     const [dropdownQuery, setDropdownQuery] = useState("");
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -47,7 +48,7 @@ function Combobox({ dropDownTitle, options, placeholder = "Select...", emptyOpti
             (dep) => dep.toLowerCase() === dropdownQuery.toLowerCase()
         );
 
-        if (dropdownQuery && !alreadyExists) {
+        if (dropdownQuery && !alreadyExists && onAddOption) {
             onAddOption(dropdownQuery)
         }
 
@@ -60,7 +61,7 @@ function Combobox({ dropDownTitle, options, placeholder = "Select...", emptyOpti
     };
 
     return (
-        <div className="relative mb-2 mt-2 w-[20rem]">
+        <div className={classes + " relative mb-2 mt-2 w-[20rem]"}>
             <label className="input w-full">
                 <span className=" text-neutral-400 font-bold select-none" >{dropDownTitle}</span>
                 <input
@@ -75,7 +76,7 @@ function Combobox({ dropDownTitle, options, placeholder = "Select...", emptyOpti
                     }}
                     onKeyDown={handleKeyDown}
                 />
-                {filtered.length === 0 && Object.keys(options).length !== 0 &&
+                {filtered.length === 0 && Object.keys(options).length !== 0 && onAddOption &&
                     <span className="badge badge-error badge-xs" onClick={handleAddCustom}>
                         ADD
                     </span>

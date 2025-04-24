@@ -5,6 +5,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import LoadState from "./LoadState";
 import { EyeDropperIcon } from "@heroicons/react/24/solid";
 import { APIKeyValues, Column, getNestedValueOrElse, useFetchData } from "../services/apiService";
+import WavesBg from "./WavesBg";
 
 type TableProps = {
     allColumns: Column[];
@@ -44,9 +45,9 @@ const DataTable = ({ allColumns, selectedColumns, apiGetAll, navigationHolder }:
     ) : [];
 
     return (
-        <div className={`scroll-content-div-corner h-full`}>
+        <div className={`scroll-content-div-corner h-full wave-body`}>
             <LoadState error={error} loading={loading} />
-            {!error && !loading &&
+            {error || loading ? <WavesBg /> :
                 <table className="table-scale">
                     <thead>
                         <tr className="tr-scale sticky top-0 shadow-2xl shadow-neutral-950">
@@ -88,7 +89,6 @@ const DataTable = ({ allColumns, selectedColumns, apiGetAll, navigationHolder }:
                     </thead>
 
                     {<tbody className="overflow-hidden">
-
                         {Array.isArray(dataList) && dataList !== undefined && filteredDatas.map((dat, index) => (
                             <tr key={index}
                                 className="tr-scale"

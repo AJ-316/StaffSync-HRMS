@@ -19,8 +19,8 @@ function LoadState({ error, loading }: LoadStateProps) {
             }
             {error &&
                 <>
-                    <ExclamationCircleIcon className='w-10 h-10 m-2 text-error' />
-                    <p className="text-4xl text-center text-error p-4" > {error} </p>
+                    <ExclamationCircleIcon className='w-10 h-10 m-2 text-error z-1' />
+                    <p className="text-4xl text-center text-error p-4 z-1" > {error} </p>
                 </>}
         </div>
     );

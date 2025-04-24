@@ -20,6 +20,11 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    @PostMapping("/add")
+    public Result addEmployee(@RequestBody EmployeeDto employeeDto) {
+        return employeeService.addEmployee(employeeDto);
+    }
+
     @GetMapping("/getall")
     public DataResult<List<EmployeeDto>> getAllEmployees() {
         return employeeService.getAllEmployees();

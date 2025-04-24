@@ -1,6 +1,9 @@
 package com.staffsync.backend.entities.dtos;
 
+import com.staffsync.backend.entities.concretes.Department;
 import com.staffsync.backend.entities.concretes.Profile;
+
+import java.util.Optional;
 
 public record ProfileDto(
         Integer id,
@@ -10,10 +13,15 @@ public record ProfileDto(
 
     @Override
     public Profile toEntity() {
+        System.err.println("Calling department: " + departmentDto);
+        Department department = Optional.ofNullable(departmentDto)
+                .map(DepartmentDto::toEntity)
+                .orElse(null);
+
         Profile profile = new Profile();
-        profile.setId(id());
-        profile.setName(name());
-        profile.setDepartment(departmentDto().toEntity());
+        Optional.ofNullable(id()).ifPresent(profile::setId);
+        Optional.ofNullable(name()).ifPresent(profile::setName);
+        Optional.ofNullable(department).ifPresent(profile::setDepartment);
         return profile;
     }
 

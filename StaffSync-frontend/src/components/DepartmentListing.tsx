@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { ListingDropdownContext } from "../pages/Recruitment/PageJobListings";
 import Combobox from "./Combobox";
 import ProfileListing, { ProfileData } from "./ProfileListing";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { ListingDropdownContext } from "../services/ListingDropdownContext";
 
 export type DepartmentData = {
     key: string;
@@ -20,8 +20,8 @@ function DepartmentListing({ departmentData }: DepartmentListingProps) {
     const { departmentList, onAddProfile, onRemoveDepartment, onCreateDepartment, onSelectDepartment } = useContext(ListingDropdownContext);
 
     return (
-        <div className="m-2">
-            <div className="flex items-center">
+        <div className="m-2 pt-5">
+            <div className={`sticky top-0 z-1 flex items-center bg-base-100 rounded-xl shadow-2xl shadow-black/70`}>
                 <button
                     title="Remove Department"
                     type="button"
@@ -45,7 +45,7 @@ function DepartmentListing({ departmentData }: DepartmentListingProps) {
                     Add Profile
                 </button>
             </div>
-            <div>
+            <div className="overflow-y-auto max-h-[25.5rem] bg-base-100 rounded-xl ">
                 {departmentData.profiles.map((prop, key) =>
                     <ProfileListing
                         key={key}

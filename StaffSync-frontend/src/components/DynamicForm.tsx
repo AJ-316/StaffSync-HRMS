@@ -3,6 +3,7 @@ import { AxiosResponse } from "axios";
 import LoadState from "./LoadState";
 import { PaperAirplaneIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { APIKeyValues, Column, getNestedValue, isArrayOfAPIKeyValues, useFetchData } from "../services/apiService";
+import WavesBg from "./WavesBg";
 
 type DataProps = {
     id: number;
@@ -42,16 +43,11 @@ const DynamicForm = ({ id, allColumns, apiGetById, onSubmit }: DataProps) => {
         }
     };
 
-    useEffect(() => {
-        console.log("isEditable changed:", isEditable);
-    }, [isEditable]);
-
     return (
-        <div className="scroll-content-div-corner h-fit">
+        <div className="scroll-content-div-corner h-fit wave-body">
             <LoadState error={error} loading={loading} />
 
-            {!error && !loading &&
-
+            {error || loading ? <WavesBg /> :
                 <form onSubmit={handleSubmit} className="p-6 w-full flex flex-col">
                     <div className="flex flex-wrap -mx-2">
                         {allColumns.map((col) => (

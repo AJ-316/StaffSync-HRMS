@@ -1,29 +1,35 @@
 package com.staffsync.backend.entities.dtos;
 
-import com.staffsync.backend.entities.concretes.Candidate;
 import com.staffsync.backend.entities.concretes.Qualification;
+
+import java.util.Optional;
 
 public record QualificationDto(
         Integer id,
-        String name
+        String name,
+        String company,
+        String leaveReason,
+        Qualification.Certificate certificate
 ) implements Convertible<Qualification> {
 
     public static QualificationDto fromEntity(Qualification qualification) {
         return new QualificationDto(
                 qualification.getId(),
-                qualification.getName()
+                qualification.getName(),
+                qualification.getCompany(),
+                qualification.getLeaveReason(),
+                qualification.getCertificate()
         );
     }
-
-    /*public Qualification update(Object... entities) {
-        return null;
-    }*/
 
     @Override
     public Qualification toEntity() {
         Qualification qualification = new Qualification();
-        qualification.setId(id());
-        qualification.setName(name());
+        Optional.ofNullable(id()).ifPresent(qualification::setId);
+        Optional.ofNullable(name()).ifPresent(qualification::setName);
+        Optional.ofNullable(company()).ifPresent(qualification::setCompany);
+        Optional.ofNullable(leaveReason()).ifPresent(qualification::setLeaveReason);
+        Optional.ofNullable(certificate()).ifPresent(qualification::setCertificate);
         return qualification;
     }
 }

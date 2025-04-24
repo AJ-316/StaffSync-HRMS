@@ -62,6 +62,14 @@ function UserDataDisplay({ userType, allUserColumns, apiGetById, apiUpdateData }
                                         {
                                             name: "View Salary",
                                             link: `/employee/salary/data?id=${id}`
+                                        },
+                                        {
+                                            name: "View Attendance",
+                                            link: `/employee/attendance/data?id=${id}`
+                                        },
+                                        {
+                                            name: "View Welfare",
+                                            link: `/employee/welfare/data?id=${id}`
                                         }
                                     ]
                                 }

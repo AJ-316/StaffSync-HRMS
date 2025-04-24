@@ -3,6 +3,8 @@ package com.staffsync.backend.entities.dtos;
 import com.staffsync.backend.entities.concretes.Profile;
 import com.staffsync.backend.entities.concretes.User;
 
+import java.util.Optional;
+
 public record SimpleUserDto (
         Integer id,
         String name,
@@ -21,13 +23,15 @@ public record SimpleUserDto (
 
     @Override
     public User toEntity() {
-        Profile profileE = profileDto().toEntity();
+        Profile profile = Optional.ofNullable(profileDto)
+                .map(ProfileDto::toEntity)
+                .orElse(null);
 
         User user = new User();
-        user.setId(id());
-        user.setName(name());
-        user.setGender(gender());
-        user.setProfile(profileE);
+        Optional.ofNullable(id()).ifPresent(user::setId);
+        Optional.ofNullable(name()).ifPresent(user::setName);
+        Optional.ofNullable(gender()).ifPresent(user::setGender);
+        Optional.ofNullable(profile).ifPresent(user::setProfile);
         return user;
     }
 }

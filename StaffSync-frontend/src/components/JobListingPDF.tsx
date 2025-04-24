@@ -1,6 +1,7 @@
 import { DepartmentData } from './DepartmentListing';
 import jsPDF from 'jspdf';
 import { ProfileData } from './ProfileListing';
+import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 
 export default function JobListingPDF({ departments, disabled }: { departments: DepartmentData[], disabled: boolean }) {
 
@@ -107,21 +108,26 @@ export default function JobListingPDF({ departments, disabled }: { departments: 
     doc.setFontSize(22);
     doc.text(text, (pageWidth - doc.getTextWidth(text)) / 2, y);
     y += lineHeight;
+    
+    let firstPage = true;
 
     departments.forEach((dept, dIndex) => {
       const deptTitleHeight = lineHeight;
       const firstProfileHeight = calculateProfileHeight(dept.profiles[0]);
       const totalNeeded = deptTitleHeight + firstProfileHeight;
 
-      if (y + totalNeeded > pageHeight - margin) {
+      if (y + totalNeeded > pageHeight - margin && !firstPage) {
+        alert(`${y+totalNeeded}, ${pageHeight-margin}`)
         doc.addPage();
         y = margin;
       }
+      firstPage = false;
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
       doc.text(`${dIndex + 1}) Department: ${dept.name}`, margin, y);
       y += lineHeight;
+
 
       doc.setFontSize(12);
       dept.profiles.forEach((profile, pIndex) => {
@@ -159,30 +165,6 @@ export default function JobListingPDF({ departments, disabled }: { departments: 
     doc.save("job-listings-pretty.pdf");
   };
 
-
-  /*  const getDescriptionMarkdown = (title: string, description: string) => {
-     return (
-       <div className="mr-10 my-4 prose">
-         <Markdown
-           components={{
-             p: ({ children }) => <p className="mb-2 text-black">{children}</p>,
-             ul: ({ children }) => (
-               <ul className="text-black [&>li::marker]:text-black">
-                 {children}
-               </ul>
-             ),
-             strong: ({ children }) => <strong className="text-black">{children}</strong>,
-             li: ({ children }) => <li className="ml-4 text-black">{children}</li>,
-           }}
-           remarkPlugins={[remarkGfm]}
-           rehypePlugins={[rehypeHighlight]}
-         >
-           {"**" + title + "**:  \n\n" + (description || "*No description provided.*")}
-         </Markdown>
-       </div>
-     )
-   } */
-
   return (
     <div className="p-4">
       <button
@@ -191,35 +173,9 @@ export default function JobListingPDF({ departments, disabled }: { departments: 
         onClick={() => generateStyledPDF(departments)}
         disabled={disabled}
       >
+        <DocumentArrowDownIcon className='w-4 h-4'/>
         Download PDF
       </button >
-      {/* <div ref={contentRef} className="p-6 bg-white rounded shadow-md text-black w-[800px]">
-        {departments.map((dept) => (
-          <div key={dept.name} className="mb-6 border-b-4 pb-4">
-            <h2 className="text-xl mb-2">
-              <span className='font-bold'>Department: </span>
-              {dept.name || "No Department"}
-            </h2>
-
-            {dept.profiles.map((profile) => (
-              <div key={profile.name} className="ml-4 mb-4 border-b">
-
-                <h3 className="text-lg">
-                  <span className='font-bold'>Profile: </span>
-                  {profile.name || "No Profile"}
-                </h3>
-
-                <p>Experience: {profile.experience}</p>
-                <p>Vacancy: {profile.vacancy}</p>
-
-                {getDescriptionMarkdown("Job Description", profile.jobDescription)}
-                {getDescriptionMarkdown("Responsibilities", profile.responsibilities)}
-                {getDescriptionMarkdown("Requirements", profile.requirements)}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div> */}
     </div>
   );
 }

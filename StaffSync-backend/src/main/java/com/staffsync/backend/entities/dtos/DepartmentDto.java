@@ -1,7 +1,8 @@
 package com.staffsync.backend.entities.dtos;
 
-import com.staffsync.backend.entities.concretes.Candidate;
 import com.staffsync.backend.entities.concretes.Department;
+
+import java.util.Optional;
 
 public record DepartmentDto(
         Integer id,
@@ -9,21 +10,21 @@ public record DepartmentDto(
 ) implements Convertible<Department> {
 
     public static DepartmentDto fromEntity(Department department) {
+        if (department == null) {
+            return null;
+        }
+
         return new DepartmentDto(
                 department.getId(),
                 department.getName()
         );
     }
 
-    /*public Department update(Object... entities) {
-        return null;
-    }*/
-
     @Override
     public Department toEntity() {
         Department department = new Department();
-        department.setId(id());
-        department.setName(name());
+        Optional.ofNullable(id()).ifPresent(department::setId);
+        Optional.ofNullable(name()).ifPresent(department::setName);
         return department;
     }
 }

@@ -39,8 +39,8 @@ function PageDatabase() {
         desc={["Manage your employees", "Add filters to search through database with ease"]}
 
         content={
-          <details ref={filterBtnRef} className="dropdown">
-            <summary className="btn btn-soft btn-accent m-5 p-5 flex items-center gap-2 text-xl">
+          <details ref={filterBtnRef} className="dropdown p-2">
+            <summary className="btn btn-soft btn-accent flex items-center gap-2 text-xl">
               Filter
               {isFiltering && <SolidFunnel className='w-4 h-4' />}
               {!isFiltering && <OutlineFunnel className='w-4 h-4' />}

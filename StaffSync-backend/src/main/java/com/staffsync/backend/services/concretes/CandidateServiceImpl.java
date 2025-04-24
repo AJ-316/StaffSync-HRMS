@@ -1,10 +1,13 @@
 package com.staffsync.backend.services.concretes;
 
 import com.staffsync.backend.entities.concretes.Candidate;
+import com.staffsync.backend.entities.concretes.Qualification;
+import com.staffsync.backend.entities.concretes.User;
 import com.staffsync.backend.entities.dtos.CandidateDto;
 import com.staffsync.backend.entities.dtos.EmployeeDto;
 import com.staffsync.backend.entities.dtos.UserDto;
 import com.staffsync.backend.repositories.CandidateRepository;
+import com.staffsync.backend.repositories.QualificationRepository;
 import com.staffsync.backend.result.*;
 import com.staffsync.backend.services.abstracts.CandidateService;
 import com.staffsync.backend.services.abstracts.UserService;
@@ -29,17 +32,39 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Result addCandidate(CandidateDto candidate) {
-        candidateRepository.save(candidate.toEntity());
+    public Result addCandidate(CandidateDto candidateDto) {
+        Candidate candidate = candidateDto.toEntity();
+
+        DataResult<User> userDataResult = userService.addUser(UserDto.fromEntity(candidate.getUser()));
+
+        if(!userDataResult.isSuccess()) {
+            return userDataResult;
+        }
+
+        candidate.setUser(userDataResult.getData());
+
+        candidateRepository.save(candidate);
         return new SuccessResult("Added Candidate...");
     }
 
     @Override
-    public Result updateCandidate(CandidateDto candidate) {
-        UserDto user = candidate.userDto();
-        userService.updateUser(user.id(), user);
-
-        candidateRepository.save(candidate.toEntity());
+    public Result updateCandidate(CandidateDto candidateDto) {
+        Candidate candidate = candidateDto.toEntity();
+        Optional<User> userOptional = userService.getUserById(candidate.getUser().getId());
+        if(userOptional.isEmpty()) {
+            return new ErrorResult("Cannot Update Candidate: Invalid User ID");
+        }
+        System.err.println("@0");
+        Optional<User> updatedUser = userService.updateUser(userOptional.get().getId(), UserDto.fromEntity(userOptional.get()));
+        System.err.println("@1");
+        if(updatedUser.isEmpty()) {
+            return new ErrorResult("Cannot Update Candidate: Cannot save User");
+        }
+        System.err.println("@2");
+        candidate.setUser(updatedUser.get());
+        System.err.println("@3");
+        candidateRepository.save(candidate);
+        System.err.println("@4");
         return new SuccessResult("Updated Candidate...");
     }
 

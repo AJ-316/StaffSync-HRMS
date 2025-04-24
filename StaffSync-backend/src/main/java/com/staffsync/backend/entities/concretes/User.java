@@ -26,11 +26,11 @@ public class User {
     private LocalDate dob;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('Male', 'Female', 'Other')")
+    @Column(name = "gender")
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "marital_status", columnDefinition = "ENUM('Single', 'Married', 'Divorced', 'Widowed')")
+    @Column(name = "marital_status")
     private MaritalStatus maritalStatus;
 
     @Column(name = "address_temp", columnDefinition = "TEXT")
@@ -39,7 +39,7 @@ public class User {
     @Column(name = "address_perm", columnDefinition = "TEXT")
     private String addressPerm;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "contact_number", nullable = false, unique = true, length = 20)

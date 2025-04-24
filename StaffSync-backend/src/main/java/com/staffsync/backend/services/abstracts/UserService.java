@@ -5,13 +5,15 @@ import com.staffsync.backend.entities.concretes.Profile;
 import com.staffsync.backend.entities.concretes.User;
 import com.staffsync.backend.entities.dtos.DepartmentDto;
 import com.staffsync.backend.entities.dtos.UserDto;
+import com.staffsync.backend.result.DataResult;
+import com.staffsync.backend.result.Result;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
 
-    User addUser(UserDto user);
+    DataResult<User> addUser(UserDto user);
 
     List<User> getAllUsers();
 

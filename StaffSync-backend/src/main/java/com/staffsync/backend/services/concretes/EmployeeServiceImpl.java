@@ -1,8 +1,10 @@
 package com.staffsync.backend.services.concretes;
 
+import com.staffsync.backend.entities.concretes.Employee;
 import com.staffsync.backend.entities.concretes.Department;
 import com.staffsync.backend.entities.concretes.Employee;
 import com.staffsync.backend.entities.concretes.User;
+import com.staffsync.backend.entities.dtos.EmployeeDto;
 import com.staffsync.backend.entities.dtos.EmployeeDto;
 import com.staffsync.backend.entities.dtos.UserDto;
 import com.staffsync.backend.repositories.EmployeeRepository;
@@ -13,7 +15,6 @@ import com.staffsync.backend.services.abstracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +33,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Result addEmployee(EmployeeDto employee) {
-        employeeRepository.save(employee.toEntity());
+    public Result addEmployee(EmployeeDto employeeDto) {
+        System.err.println(employeeDto.joinDate());
+        Employee employee = employeeDto.toEntity();
+        Optional<User> userOptional = userService.getUserById(employee.getUser().getId());
+        if(userOptional.isEmpty())
+            return new ErrorResult("Could not Add Employee: Invalid User Id");
+
+        employee.setUser(userOptional.get());
+
+        employeeRepository.save(employee);
         return new SuccessResult("Added Employee...");
     }
     /*public Result updateEmployee(EmployeeDto employeeDto) {

@@ -8,13 +8,25 @@
     }
 }
 
-.wave-body {
+.wave-body-main {
     background-image: linear-gradient(
-        50deg,
+        45deg,
         var(--color-base-300),
         var(--color-accent-content),
         var(--color-info-content),
         var(--color-base-300)
+    );
+    background-size: 400% 400%;
+    background-position: 0% 0%;
+    animation: gradient 20s ease-in-out infinite;
+}
+
+.wave-body {
+    background-image: linear-gradient(
+        45deg,
+        var(--color-base-300) 15%,
+        color-mix(in oklab, var(--color-info-content) 75%, var(--color-base-300) 25%) 50%,
+        var(--color-base-300) 85%
     );
     background-size: 400% 400%;
     background-position: 0% 0%;
@@ -60,7 +72,6 @@
 .wave {
     @apply fixed w-[200%] h-[18em] animate-[wave_8s_-3s_ease-in-out_infinite]
         rounded-[1000%_1000%_0_0] left-0 bottom-0 bg-base-300/25;
-    transform: translate3d(0, 0, 0);
 }
 
 .wave:nth-of-type(2) {
@@ -71,32 +82,6 @@
     @apply bottom-[-4.5em] animate-[wave_16s_-1s_reverse_infinite];
 }
   
-/* .wave {
-    background: rgb(255 255 255 / 25%);
-    border-radius: 1000% 1000% 0 0;
-    position: fixed;
-    width: 200%;
-    height: 18em;
-    animation: wave 8s -3s linear infinite;
-    transform: translate3d(0, 0, 0);
-    opacity: 0.8;
-    bottom: 0;
-    left: 0;
-    z-index: 1;
-}
-
-.wave:nth-of-type(2) {
-    bottom: -2.25em;
-    animation: wave 12s linear reverse infinite;
-    opacity: 0.8;
-}
-
-.wave:nth-of-type(3) {
-    bottom: -4.5em;
-    animation: wave 16s -1s reverse infinite;
-    opacity: 0.9;
-} */
-
 .prose p {
     margin: 0;
 }
@@ -148,12 +133,23 @@
     @apply m-5 overflow-y-auto shadow-2xl shadow-neutral-950 border-b-3 border-t-3 border-info-content rounded-xl
 }
 
+.content-div {
+    @apply m-5 shadow-2xl shadow-neutral-950 border-b-3 border-t-3 border-info-content rounded-xl
+}
+
 .scroll-content-div-corner {
     @apply m-5 overflow-y-auto shadow-2xl shadow-neutral-950 border-l-3 border-t-3 border-info-content rounded-xl
 }
 
+.tab-scale {
+    @apply text-accent hover:text-accent-content
+}
+
 .table-scale {
     @apply font-[roboto] w-full h-full border-separate border-spacing-y-2 p-5 pt-0
+}
+.table-disp {
+    @apply font-[roboto] w-full h-fit border-separate border-spacing-y-2 p-5 pt-0
 }
 .td-scale {
     @apply text-sm text-left p-4 whitespace-nowrap;
@@ -166,13 +162,29 @@
 .tr-scale {
     @apply bg-base-100 hover:border-2 border-accent hover:bg-accent-content transition-all duration-100 ease-in-out;
 }
+.tr-disp {
+    @apply bg-base-100 transition-all duration-100 ease-in-out;
+}
+
+/* Alternate Colors */
+.collapse:nth-child(odd) {
+    @apply bg-base-200 hover:border-accent transition-all
+}
+.collapse:nth-child(even) {
+    @apply bg-base-100 hover:border-accent transition-all
+}
 
 /* Alternate Colors */
 .tr-scale:nth-child(even) {
     @apply bg-base-200 hover:bg-accent-content
 }
-.th-scale:nth-child(even) {
-    @apply bg-[#002641] hover:bg-accent-content
+
+/* Alternate Colors */
+.tr-disp:nth-child(even) {
+    @apply bg-base-200
+}
+.th-disp:nth-child(even) {
+    @apply bg-[#002641]
 }
 
 /* Rounded Rows */

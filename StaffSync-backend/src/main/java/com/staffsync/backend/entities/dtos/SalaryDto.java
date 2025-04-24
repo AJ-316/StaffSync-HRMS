@@ -3,6 +3,7 @@ package com.staffsync.backend.entities.dtos;
 import com.staffsync.backend.entities.concretes.*;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public record SalaryDto(
         Integer id,
@@ -33,14 +34,14 @@ public record SalaryDto(
     @Override
     public Salary toEntity() {
         Salary salary = new Salary();
-        salary.setId(id());
-        salary.setBasicSalary(basicSalary);
-        salary.setHra(hra());
-        salary.setTax(tax());
-        salary.setDeductions(deductions());
-        salary.setHraSalary(hraSalary());
-        salary.setTaxSalary(taxSalary());
-        salary.setNetSalary(netSalary());
+        Optional.ofNullable(id()).ifPresent(salary::setId);
+        Optional.ofNullable(basicSalary()).ifPresent(salary::setBasicSalary);
+        Optional.ofNullable(hra()).ifPresent(salary::setHra);
+        Optional.ofNullable(tax()).ifPresent(salary::setTax);
+        Optional.ofNullable(deductions()).ifPresent(salary::setDeductions);
+        Optional.ofNullable(hraSalary()).ifPresent(salary::setHraSalary);
+        Optional.ofNullable(taxSalary()).ifPresent(salary::setTaxSalary);
+        Optional.ofNullable(netSalary()).ifPresent(salary::setNetSalary);
         return salary;
     }
 }

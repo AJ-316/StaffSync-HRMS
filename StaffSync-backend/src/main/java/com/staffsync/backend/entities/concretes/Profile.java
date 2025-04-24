@@ -21,6 +21,6 @@ public class Profile {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = true)
+    @JoinColumn(name = "department_id", referencedColumnName = "department_id")
     private Department department;
 }

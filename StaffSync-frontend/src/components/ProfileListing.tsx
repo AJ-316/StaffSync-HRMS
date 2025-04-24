@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
 import Combobox, { ComboboxValues } from "./Combobox";
-import { ListingDropdownContext } from "../pages/Recruitment/PageJobListings";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import NestedInput from "./NestedInput";
 import MultiMarkdownCard from "./MultiMarkdownCard";
+import { ListingDropdownContext } from "../services/ListingDropdownContext";
 
 export type ProfileData = {
     key: string;
@@ -71,7 +71,7 @@ function ProfileListing({ departmentId, departmentKey, profileData }: ProfileLis
     }
 
     return (
-        <div className="flex items-center border-t-1 border-b-1 bg-info-content/15 border-info-content rounded-xl m-2 mt-6 p-2">
+        <div className="flex items-center border-t-1 border-b-1 bg-base-300 border-info-content rounded-xl m-2 mt-6 p-2">
             <button
                 type="button"
                 title="Remove Profile"
@@ -84,7 +84,7 @@ function ProfileListing({ departmentId, departmentKey, profileData }: ProfileLis
                 <Combobox
                     dropDownTitle="Profile:"
                     options={profileList[departmentId] || {}}
-                    onAddOption={(newOption) => onCreateProfile(departmentKey, newOption)}
+                    onAddOption={(newOption) => onCreateProfile(departmentId, newOption)}
                     onSelectOption={(k, v) => onSelectProfile(departmentKey, profileData.key, k, v)}
                     emptyOptionsErrorText={"No Profiles Available"}
                 />

@@ -1,16 +1,15 @@
 /* import { Link } from 'react-router-dom'; */
 import Header from '../components/PageHeader/Header';
 import { motion } from 'framer-motion'
+import WavesBg from '../components/WavesBg';
 
 const Home = () => {
   return (
     <div className="flex flex-col h-screen relative">
       <Header />
-      <div className="wave" />
-      <div className="wave" />
-      <div className="wave" />
+      <WavesBg />
 
-      <div className='wave-body w-full'>
+      <div className='wave-body-main w-full'>
         <div className="relative z-1 w-full h-[calc(100vh-4rem)] flex flex-col justify-center items-center">
           <motion.div
             initial={{ y: -50, scaleY: 0.8, opacity: 0 }}
